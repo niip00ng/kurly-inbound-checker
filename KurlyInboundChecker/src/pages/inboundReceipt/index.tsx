@@ -17,6 +17,7 @@ const InboundReceipt = () => {
       <View style={s.wrapper}>
         <LinearGradient colors={['#333333', '#000000']}>
           <ScrollView
+            style={{height: '100%'}}
             contentContainerStyle={s.scrollWrapper}
             showsVerticalScrollIndicator={false}>
             {/* 기본 정보 (카드형태) */}
@@ -119,7 +120,7 @@ const s = StyleSheet.create({
     flex: 1,
   },
   scrollWrapper: {
-    padding: 20,
+    padding: 15,
   },
   title: {
     fontSize: 16,
@@ -132,11 +133,6 @@ const s = StyleSheet.create({
     padding: 16,
     marginTop: 0,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5, // Android 그림자
   },
   cardTitle: {
     fontSize: 20,

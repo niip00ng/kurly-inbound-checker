@@ -11,6 +11,9 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export interface InboundReceiptItem {
   code: string;
@@ -178,40 +181,91 @@ const Home = () => {
         s.card,
         {
           backgroundColor:
-            item.inboundStatus === 'READY' ? '#ffffffDD' : '#ffffff50',
+            item.inboundStatus === 'READY' ? '#00000080' : '#00000020',
         },
       ]}
       activeOpacity={0.7}
       onPress={() => handleCardPress(item)}>
       <View style={[s.cardRow, {justifyContent: 'space-between'}]}>
-        <Text style={s.code}>{item.code}</Text>
+        <View style={[s.cardLabel, {marginBottom: 10}]}>
+          <Ionicons
+            name={'barcode'}
+            size={20}
+            color={'#ffffff'}
+            style={{marginRight: 5}}
+          />
+          <Text style={s.code}>{item.code}</Text>
+        </View>
         <Text style={s.status(item.inboundStatus)}>
           {item.inboundStatus === 'READY' ? '준비 중' : '완료'}
         </Text>
       </View>
 
       <View style={s.cardRow}>
-        <Text style={s.infoLabel}>입고 예정일</Text>
+        <View style={s.cardLabel}>
+          <MaterialCommunityIcons
+            name={'calendar-arrow-left'}
+            size={18}
+            color={'#ffffff'}
+            style={{marginRight: 5}}
+          />
+          <Text style={s.infoLabel}>입고 예정일</Text>
+        </View>
+
         <Text style={s.info}>{item.inboundDate}</Text>
       </View>
       <View style={s.cardRow}>
-        <Text style={s.infoLabel}>발주 날짜</Text>
+        <View style={s.cardLabel}>
+          <MaterialCommunityIcons
+            name={'calendar-arrow-right'}
+            size={18}
+            color={'#ffffff'}
+            style={{marginRight: 5}}
+          />
+          <Text style={s.infoLabel}>발주 날짜</Text>
+        </View>
+
         <Text style={s.info}>{item.inboundOrderDate}</Text>
       </View>
       <View style={s.cardRow}>
-        <Text style={s.infoLabel}>입고지</Text>
+        <View style={s.cardLabel}>
+          <MaterialIcons
+            name={'factory'}
+            size={16}
+            color={'#ffffff'}
+            style={{marginRight: 5, marginLeft: 1}}
+          />
+          <Text style={s.infoLabel}>입고지</Text>
+        </View>
         <Text style={s.info}>{item.inboundSimplePlace}</Text>
       </View>
       <View style={s.cardRow}>
-        <Text style={s.infoLabel}>유형</Text>
+        <View style={s.cardLabel}>
+          <MaterialIcons
+            name={'category'}
+            size={16}
+            color={'#ffffff'}
+            style={{marginRight: 5, marginLeft: 1}}
+          />
+          <Text style={s.infoLabel}>유형</Text>
+        </View>
+
         <Text style={s.info}>
           {item.inboundType === 'NORMAL'
             ? '일반입고(입고시간없음)'
             : '택배입고'}
         </Text>
       </View>
-      <View style={[s.cardRow, {alignItems: 'center'}]}>
-        <Text style={s.infoLabel}>입고상품</Text>
+      <View style={[s.cardRow, {alignItems: 'flex-start'}]}>
+        <View style={[s.cardLabel, {marginTop: 0}]}>
+          <MaterialCommunityIcons
+            name={'package'}
+            size={16}
+            color={'#ffffff'}
+            style={{marginRight: 5, marginLeft: 1}}
+          />
+          <Text style={s.infoLabel}>입고상품</Text>
+        </View>
 
         <View>
           {item.products.map((product, index) => (
@@ -223,8 +277,10 @@ const Home = () => {
                 alignItems: 'center',
                 marginBottom: 4,
               }}>
-              <Text>{product.goodsName}</Text>
-              <FastImage
+              <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
+                {product.goodsName}
+              </Text>
+              {/* <FastImage
                 style={{
                   marginLeft: 10,
                   width: 30,
@@ -232,7 +288,7 @@ const Home = () => {
                   borderRadius: 5,
                 }}
                 source={{uri: product.imageUrl}}
-              />
+              /> */}
             </View>
           ))}
         </View>
@@ -271,30 +327,31 @@ const s = StyleSheet.create({
     padding: 16,
     borderRadius: 20,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 2,
   },
   code: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
+    color: '#ffffff',
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
     fontWeight: '300',
-    color: '#222222',
+    color: '#ffffff',
     marginBottom: 4,
     minWidth: 100,
   },
   infoLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#222222',
+    color: '#ffffff',
     marginBottom: 4,
     minWidth: 100,
+  },
+  cardLabel: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   cardRow: {
     display: 'flex',
@@ -304,6 +361,6 @@ const s = StyleSheet.create({
   status: (status: string) => ({
     fontSize: 14,
     fontWeight: 'bold',
-    color: status === 'READY' ? '#222222' : '#444444',
+    color: status === 'READY' ? '#ffffff' : '#ffffff80',
   }),
 });
