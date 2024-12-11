@@ -11,15 +11,14 @@ import Settings from '@pages/settings';
 import DeviceInfo from 'react-native-device-info';
 import TabIcon from './TabIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 
 const CustomHeader = ({title}: {title: string}) => (
-  <View style={s.header}>
-    <StatusBar backgroundColor={'#141615'} />
+  <LinearGradient colors={['#65039E', '#9032C7']} style={s.header}>
     <View
       style={{
-        backgroundColor: '#ffffff',
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         zIndex: 3,
@@ -34,10 +33,10 @@ const CustomHeader = ({title}: {title: string}) => (
       }}>
       <Text style={s.headerTitle}>{title}</Text>
       <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
-        <Ionicons name={'notifications'} size={30} color={'#999999'} />
+        <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
       </TouchableOpacity>
     </View>
-  </View>
+  </LinearGradient>
 );
 
 const Main = (props: any) => {
@@ -54,7 +53,7 @@ const Main = (props: any) => {
                     <Ionicons
                       name={active() ? 'receipt' : 'receipt-outline'}
                       size={25}
-                      color="#222222"
+                      color="#ffffff"
                     />
                   }
                 />
@@ -66,7 +65,7 @@ const Main = (props: any) => {
                     <Ionicons
                       name={active() ? 'grid' : 'grid-outline'}
                       size={25}
-                      color="#222222"
+                      color="#ffffff"
                     />
                   }
                 />
@@ -90,7 +89,6 @@ const Main = (props: any) => {
 
   return (
     <GestureHandlerRootView style={s.container}>
-      <StatusBar backgroundColor={'#141615'} />
       <Tab.Navigator
         screenOptions={{
           tabBarHideOnKeyboard: true,
@@ -124,16 +122,14 @@ const s = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#ffffff',
   },
   wrapper: {
     zIndex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-around',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#333333',
     paddingTop: 15,
     paddingBottom: Platform.OS === 'ios' && DeviceInfo.hasNotch() ? 25 : 15,
     ...Platform.select({
@@ -152,7 +148,6 @@ const s = StyleSheet.create({
     width: '100%',
   },
   header: {
-    backgroundColor: '#f8f9fa',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -164,6 +159,6 @@ const s = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ffffff',
   },
 });
