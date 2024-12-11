@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-type InboundOrders = {
+type InboundReceipt = {
   code: string;
   inboundOrderDate: string;
   inboundDate: string;
@@ -23,7 +23,9 @@ type InboundOrders = {
 const Home = () => {
   const navigation: any = useNavigation();
 
-  const [inboundOrders, setInboundOrders] = useState<Array<InboundOrders>>([]);
+  const [inboundReceipts, setInboundOrders] = useState<Array<InboundReceipt>>(
+    [],
+  );
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -52,6 +54,26 @@ const Home = () => {
         inboundType: 'NORMAL',
         inboundStatus: 'END',
       },
+      {
+        code: 'T20241115_NLQ17',
+        inboundDate: '2024-10-26(화)',
+        inboundOrderDate: '2024-10-30(금)',
+        inboundSimplePlace: '김포냉동(켄달 2층)',
+        inboundPlace:
+          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
+        inboundType: 'NORMAL',
+        inboundStatus: 'END',
+      },
+      {
+        code: 'T20241115_NLQ11',
+        inboundDate: '2024-10-26(화)',
+        inboundOrderDate: '2024-10-30(금)',
+        inboundSimplePlace: '김포냉동(켄달 2층)',
+        inboundPlace:
+          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
+        inboundType: 'NORMAL',
+        inboundStatus: 'END',
+      },
     ]);
   };
 
@@ -63,11 +85,11 @@ const Home = () => {
     }, 1000); // Simulate a network request
   };
 
-  const handleCardPress = (order: InboundOrders) => {
-    navigation.navigate('OrderDetails', {order});
+  const handleCardPress = (order: InboundReceipt) => {
+    navigation.navigate('InboundReceipt', {order});
   };
 
-  const renderOrderCard = ({item}: {item: InboundOrders}) => (
+  const renderInboundReciptCard = ({item}: {item: InboundReceipt}) => (
     <TouchableOpacity
       style={s.card}
       activeOpacity={0.5}
@@ -87,8 +109,8 @@ const Home = () => {
   return (
     <SafeAreaView style={s.container}>
       <FlatList
-        data={inboundOrders}
-        renderItem={renderOrderCard}
+        data={inboundReceipts}
+        renderItem={renderInboundReciptCard}
         keyExtractor={item => item.code}
         contentContainerStyle={s.listContainer}
         refreshControl={
