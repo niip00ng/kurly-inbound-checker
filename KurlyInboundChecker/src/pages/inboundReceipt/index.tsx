@@ -5,7 +5,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Animated,
   LayoutAnimation,
   Platform,
   UIManager,
@@ -15,7 +14,8 @@ import TopComponent from '../TopComponent';
 import {InboundReceiptItem, ProductInfo} from '../home';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
-
+import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -35,13 +35,46 @@ const InboundReceipt = () => {
   };
 
   const checklistItems = [
-    '발주서와 상품의 종류 및 수량이 일치하는가?',
-    '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
-    '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
-    '상품에 바코드가 정상 부착되어 있는가?',
-    '상품의 모든 바코드가 동일한가?',
-    '상품 라벨지에 한글표시사항이 부착되어 있는가?',
-    '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+    {
+      id: '1',
+      title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+      check: false,
+    },
+    {
+      id: '2',
+      title: '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+      check: false,
+    },
+    {
+      id: '3',
+      title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+      check: false,
+    },
+    {
+      id: '4',
+      title: '상품에 바코드가 정상 부착되어 있는가?',
+      check: false,
+    },
+    {
+      id: '5',
+      title: '상품의 모든 바코드가 동일한가?',
+      check: false,
+    },
+    {
+      id: '6',
+      title: '상품의 모든 바코드가 동일한가?',
+      check: false,
+    },
+    {
+      id: '7',
+      title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+      check: false,
+    },
+    {
+      id: '8',
+      title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+      check: false,
+    },
   ];
 
   return (
@@ -56,49 +89,15 @@ const InboundReceipt = () => {
             contentContainerStyle={s.scrollWrapper}
             showsVerticalScrollIndicator={false}>
             <Text style={s.subTitle}>발주 기본 정보</Text>
-            <View style={s.card}>
-              <View style={s.cardContent}>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>발주 코드</Text>
-                  <Text style={s.value}>{inboundReceipt.code}</Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>입고예정일</Text>
-                  <Text style={s.value}>{inboundReceipt.inboundDate}</Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>발주 일</Text>
-                  <Text style={s.value}>{inboundReceipt.inboundOrderDate}</Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>입고지</Text>
-                  <Text style={s.value}>
-                    {inboundReceipt.inboundSimplePlace}
-                  </Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>입고센터 주소</Text>
-                  <Text style={[s.value]}>{inboundReceipt.inboundPlace}</Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>입고타입</Text>
-                  <Text style={s.value}>
-                    {inboundReceipt.inboundType === 'NORMAL'
-                      ? '일반입고(입고시간없음)'
-                      : '택배입고'}
-                  </Text>
-                </View>
-                <View style={s.cardRow}>
-                  <Text style={s.label}>입고상태</Text>
-                  <Text style={s.value}>
-                    {inboundReceipt.inboundStatus === 'READY'
-                      ? '입고대기'
-                      : '입고중'}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
+            <InboundReceiptBaseInfoCard
+              code={inboundReceipt.code}
+              inboundDate={inboundReceipt.inboundDate}
+              inboundOrderDate={inboundReceipt.inboundOrderDate}
+              inboundSimplePlace={inboundReceipt.inboundSimplePlace}
+              inboundPlace={inboundReceipt.inboundPlace}
+              inboundType={inboundReceipt.inboundType}
+              inboundStatus={inboundReceipt.inboundStatus}
+            />
             <Text style={s.subTitle}>
               발주 상품 체크({inboundReceipt.products.length}개)
             </Text>
@@ -166,7 +165,19 @@ const InboundReceipt = () => {
                         activeOpacity={0.7}
                         key={i}
                         style={s.checklistRow}>
-                        <Text style={s.checkItemText}>{checkItem}</Text>
+                        <MaterialIcons
+                          name={'check-circle-outline'}
+                          size={16}
+                          color={checkItem.check ? '#ffffff' : '#999999'}
+                          style={{marginRight: 5, marginLeft: 1}}
+                        />
+                        <Text
+                          style={[
+                            s.checkItemText,
+                            {color: checkItem.check ? '#ffffff' : '#999999'},
+                          ]}>
+                          {checkItem.title}
+                        </Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -248,6 +259,8 @@ const s = StyleSheet.create({
   checklistRow: {
     marginBottom: 5,
     padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
   },
   checkItemText: {
     fontSize: 14,
