@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import TopComponent from '../TopComponent';
-import {InboundReceiptItem, ProductInfo} from '../home';
+import {
+  InboundReceiptItem,
+  ProductInfo,
+} from '@pages/home/inboundReceiptsSlice';
 import LinearGradient from 'react-native-linear-gradient';
 import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,9 +11,9 @@ import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-import {ProductInfo} from '../home';
+import {ProductInfo} from '@pages/home/inboundReceiptsSlice';
 import LinearGradient from 'react-native-linear-gradient';
+import {ProductCheckItem} from '@pages/home/inboundReceiptsSlice';
 
 const width = Dimensions.get('window').width;
 interface InboundReceiptProductCheckCardProps {
@@ -23,68 +23,13 @@ interface InboundReceiptProductCheckCardProps {
   handlePress: (index: number) => void;
 }
 
-interface ProductCheckItem {
-  id: string;
-  title: string;
-  check: boolean;
-}
-
 const InboundReceiptProductCheckCard: React.FC<
   InboundReceiptProductCheckCardProps
 > = ({product, index, selectedIndex, handlePress}) => {
-  const [productCheckItems, setProductCheckItems] = useState<
-    Array<ProductCheckItem>
-  >([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCheckTitle, setSelectedCheckTitle] = useState<string | null>(
     null,
   );
-
-  useEffect(() => {
-    setProductCheckItems([
-      {
-        id: '1',
-        title: '발주서와 상품의 종류 및 수량이 일치하는가?',
-        check: false,
-      },
-      {
-        id: '2',
-        title:
-          '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
-        check: false,
-      },
-      {
-        id: '3',
-        title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
-        check: false,
-      },
-      {
-        id: '4',
-        title: '상품에 바코드가 정상 부착되어 있는가?',
-        check: false,
-      },
-      {
-        id: '5',
-        title: '상품의 모든 바코드가 동일한가?',
-        check: false,
-      },
-      {
-        id: '6',
-        title: '상품의 모든 바코드가 동일한가?',
-        check: false,
-      },
-      {
-        id: '7',
-        title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
-        check: false,
-      },
-      {
-        id: '8',
-        title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
-        check: false,
-      },
-    ]);
-  }, []);
 
   const handleCheckItemPress = (title: string) => {
     setSelectedCheckTitle(title);
@@ -144,7 +89,7 @@ const InboundReceiptProductCheckCard: React.FC<
       </TouchableOpacity>
       {selectedIndex === index && (
         <View style={styles.checklistCard}>
-          {productCheckItems.map((checkItem, i) => (
+          {product.checkList.map((checkItem: ProductCheckItem, i: number) => (
             <TouchableOpacity
               activeOpacity={0.7}
               key={i}

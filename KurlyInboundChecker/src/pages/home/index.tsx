@@ -15,29 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector} from 'react-redux';
 import {RootState} from '@modules/store';
-
-export interface InboundReceiptItem {
-  code: string;
-  inboundOrderDate: string;
-  inboundDate: string;
-  inboundSimplePlace: string;
-  inboundPlace: string;
-  inboundType: string;
-  inboundStatus: string;
-  products: Array<ProductInfo>;
-}
-
-export interface ProductInfo {
-  goodsCode: string;
-  barcode: string;
-  goodsName: string;
-  boxCount: number;
-  unitPerBoxCount: number;
-  weight: string;
-  expiredDate: string;
-  description: string;
-  imageUrl: string;
-}
+import {InboundReceiptItem} from '@pages/home/inboundReceiptsSlice';
 
 const Home = () => {
   const inboundReceipts: Array<InboundReceiptItem> = useSelector(
@@ -80,7 +58,10 @@ const Home = () => {
           />
           <Text style={s.code}>{item.code}</Text>
         </View>
-        <Text style={s.status(item.inboundStatus)}>
+        <Text
+          style={
+            item.inboundStatus === 'READY' ? s.statusReady : s.statusComplete
+          }>
           {item.inboundStatus === 'READY' ? '준비 중' : '완료'}
         </Text>
       </View>
@@ -242,9 +223,14 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 0, // 각 행 간 간격 추가
   },
-  status: (status: string) => ({
+  statusReady: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: status === 'READY' ? '#ffffff' : '#ffffff80',
-  }),
+    color: '#ffffff',
+  },
+  statusComplete: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff80',
+  },
 });

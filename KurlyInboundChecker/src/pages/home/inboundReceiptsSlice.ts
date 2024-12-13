@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-interface ProductInfo {
+export interface ProductInfo {
   goodsCode: string;
   barcode: string;
   goodsName: string;
@@ -10,9 +10,10 @@ interface ProductInfo {
   expiredDate: string;
   description: string;
   imageUrl: string;
+  checkList: Array<ProductCheckItem>;
 }
 
-interface InboundReceiptItem {
+export interface InboundReceiptItem {
   code: string;
   inboundOrderDate: string;
   inboundDate: string;
@@ -23,8 +24,14 @@ interface InboundReceiptItem {
   products: Array<ProductInfo>;
 }
 
-interface InboundReceiptsState {
+export interface InboundReceiptsState {
   inboundReceipts: Array<InboundReceiptItem>;
+}
+
+export interface ProductCheckItem {
+  id: string;
+  title: string;
+  check: boolean;
 }
 
 const initialState: InboundReceiptsState = {
@@ -49,6 +56,49 @@ const initialState: InboundReceiptsState = {
           description: '',
           imageUrl:
             'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
+          checkList: [
+            {
+              id: '1',
+              title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '2',
+              title:
+                '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+              check: false,
+            },
+            {
+              id: '3',
+              title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '4',
+              title: '상품에 바코드가 정상 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '5',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '6',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '7',
+              title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '8',
+              title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+              check: false,
+            },
+          ],
         },
         {
           goodsCode: 'MK0000068907',
@@ -61,6 +111,49 @@ const initialState: InboundReceiptsState = {
           description: '',
           imageUrl:
             'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
+          checkList: [
+            {
+              id: '1',
+              title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '2',
+              title:
+                '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+              check: false,
+            },
+            {
+              id: '3',
+              title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '4',
+              title: '상품에 바코드가 정상 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '5',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '6',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '7',
+              title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '8',
+              title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+              check: false,
+            },
+          ],
         },
       ],
     },
@@ -84,6 +177,49 @@ const initialState: InboundReceiptsState = {
           description: '',
           imageUrl:
             'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
+          checkList: [
+            {
+              id: '1',
+              title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '2',
+              title:
+                '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+              check: false,
+            },
+            {
+              id: '3',
+              title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '4',
+              title: '상품에 바코드가 정상 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '5',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '6',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '7',
+              title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '8',
+              title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+              check: false,
+            },
+          ],
         },
       ],
     },
@@ -107,6 +243,49 @@ const initialState: InboundReceiptsState = {
           description: '',
           imageUrl:
             'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
+          checkList: [
+            {
+              id: '1',
+              title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '2',
+              title:
+                '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+              check: false,
+            },
+            {
+              id: '3',
+              title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '4',
+              title: '상품에 바코드가 정상 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '5',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '6',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '7',
+              title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '8',
+              title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+              check: false,
+            },
+          ],
         },
       ],
     },
@@ -130,6 +309,49 @@ const initialState: InboundReceiptsState = {
           description: '',
           imageUrl:
             'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
+          checkList: [
+            {
+              id: '1',
+              title: '발주서와 상품의 종류 및 수량이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '2',
+              title:
+                '발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?',
+              check: false,
+            },
+            {
+              id: '3',
+              title: '외박스의 소비기한과 실상품의 소비기한이 일치하는가?',
+              check: false,
+            },
+            {
+              id: '4',
+              title: '상품에 바코드가 정상 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '5',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '6',
+              title: '상품의 모든 바코드가 동일한가?',
+              check: false,
+            },
+            {
+              id: '7',
+              title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
+              check: false,
+            },
+            {
+              id: '8',
+              title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
+              check: false,
+            },
+          ],
         },
       ],
     },
