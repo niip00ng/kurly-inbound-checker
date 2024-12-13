@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Animated,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {launchImageLibrary} from 'react-native-image-picker'; // 추가
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const width = Dimensions.get('window').width;
 
@@ -25,19 +26,60 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
   onClose,
   selectedCheckTitle,
 }) => {
+  const [manualCheck, setManualCheck] = useState(false);
+  const selectCheckTypeOpacity = useRef(new Animated.Value(1)).current;
+  const manualCheckOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!visible) {
+      // Reset animation values when the modal is closed
+      selectCheckTypeOpacity.setValue(1);
+      manualCheckOpacity.setValue(0);
+      setManualCheck(false);
+    }
+  }, [visible]);
+
   const handleGallerySelection = async () => {
     const result = await launchImageLibrary({
-      mediaType: 'photo', // 사진만 선택
-      selectionLimit: 1, // 하나의 이미지만 선택
+      mediaType: 'photo',
+      selectionLimit: 1,
     });
 
     if (result.assets && result.assets.length > 0) {
       const selectedImage = result.assets[0].uri;
       console.log('선택된 이미지:', selectedImage);
-      // 추가 작업 (예: 업로드, 화면 표시 등)
     } else {
       console.log('이미지가 선택되지 않았습니다.');
     }
+  };
+
+  const handleManualCheck = () => {
+    Animated.timing(selectCheckTypeOpacity, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      setManualCheck(true);
+      Animated.timing(manualCheckOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleBackToSelection = () => {
+    Animated.timing(manualCheckOpacity, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {});
+
+    Animated.timing(selectCheckTypeOpacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => setManualCheck(false));
   };
 
   return (
@@ -59,49 +101,86 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
             <Text style={styles.modalTitle}>체크 방법 선택</Text>
             <Text style={styles.modalText}>{selectedCheckTitle}</Text>
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.selectCheckType}
-              onPress={onClose}>
-              <Fontisto
-                name={'camera'}
-                size={18}
-                color={'#ffffff'}
-                style={{marginRight: 15, marginLeft: 10}}
-              />
-              <Text style={styles.closeButtonText}>카메라 촬영으로 체크</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.selectCheckType}
-              onPress={handleGallerySelection}>
-              <Fontisto
-                name={'picture'}
-                size={16}
-                color={'#ffffff'}
-                style={{marginRight: 15, marginLeft: 10}}
-              />
-              <Text style={styles.closeButtonText}>갤러리 이미지로 체크</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles.selectCheckType, {marginBottom: 40}]}
-              onPress={onClose}>
-              <FontAwesome
-                name={'eye'}
-                size={22}
-                color={'#ffffff'}
-                style={{marginRight: 15, marginLeft: 10}}
-              />
-              <Text style={styles.closeButtonText}>직접 수기 체크</Text>
-            </TouchableOpacity>
+            {!manualCheck && (
+              <Animated.View
+                style={[
+                  styles.selectCheckTypeContainer,
+                  {opacity: selectCheckTypeOpacity},
+                ]}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.selectCheckType}
+                  onPress={() => {}}>
+                  <Fontisto
+                    name={'camera'}
+                    size={18}
+                    color={'#ffffff'}
+                    style={{marginRight: 15, marginLeft: 10}}
+                  />
+                  <Text style={styles.closeButtonText}>
+                    카메라 촬영으로 체크
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.selectCheckType}
+                  onPress={handleGallerySelection}>
+                  <Fontisto
+                    name={'picture'}
+                    size={16}
+                    color={'#ffffff'}
+                    style={{marginRight: 15, marginLeft: 10}}
+                  />
+                  <Text style={styles.closeButtonText}>
+                    갤러리 이미지로 체크
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[styles.selectCheckType, {marginBottom: 40}]}
+                  onPress={handleManualCheck}>
+                  <FontAwesome
+                    name={'eye'}
+                    size={22}
+                    color={'#ffffff'}
+                    style={{marginRight: 15, marginLeft: 10}}
+                  />
+                  <Text style={styles.closeButtonText}>직접 수기 체크</Text>
+                </TouchableOpacity>
+              </Animated.View>
+            )}
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.closeButton}
-              onPress={onClose}>
-              <Text style={styles.closeButtonText}>닫기</Text>
-            </TouchableOpacity>
+            {manualCheck && (
+              <Animated.View
+                style={{
+                  minHeight: 220,
+                  opacity: manualCheckOpacity,
+                }}>
+                <Text style={styles.manualCheckText}>
+                  수기체크를 완료해주세요
+                </Text>
+              </Animated.View>
+            )}
+
+            <View style={styles.buttonContainer}>
+              {manualCheck && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[styles.closeButton, {left: 10}]}
+                  onPress={handleBackToSelection}>
+                  <Text style={styles.closeButtonText}>이전</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.closeButton}
+                onPress={() => {
+                  setManualCheck(false);
+                  onClose();
+                }}>
+                <Text style={styles.closeButtonText}>닫기</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </LinearGradient>
       </View>
@@ -137,6 +216,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
+  selectCheckTypeContainer: {
+    display: 'flex',
+    width: '100%',
+  },
   selectCheckType: {
     display: 'flex',
     flexDirection: 'row',
@@ -159,6 +242,20 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  manualCheckText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    position: 'absolute',
+    bottom: 15,
   },
 });
 

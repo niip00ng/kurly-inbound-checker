@@ -14,6 +14,7 @@ module.exports = {
         'react-native/no-unused-bars': 0,
         'react-native/no-inline-styles': 0,
         'react-native/no-shadow': 0,
+        'react-hooks/exhaustive-deps': 'off',
       },
     },
   ],
