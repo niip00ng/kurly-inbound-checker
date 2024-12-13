@@ -54,7 +54,7 @@ const InboundReceipt = () => {
               inboundStatus={inboundReceipt.inboundStatus}
             />
             <Text style={s.subTitle}>
-              발주 상품 체크({inboundReceipt.products.length}개)
+              발주 상품 {inboundReceipt.products.length}개
             </Text>
 
             {inboundReceipt.products.map((item: ProductInfo, index) => (

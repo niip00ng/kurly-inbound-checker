@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,11 +9,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
+import {RootState} from '@modules/store';
 
 export interface InboundReceiptItem {
   code: string;
@@ -39,134 +40,17 @@ export interface ProductInfo {
 }
 
 const Home = () => {
+  const inboundReceipts: Array<InboundReceiptItem> = useSelector(
+    (state: RootState) => state.InboundReceipts.inboundReceipts,
+  );
+
   const navigation: any = useNavigation();
 
-  const [inboundReceipts, setInboundOrders] = useState<
-    Array<InboundReceiptItem>
-  >([]);
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    loadInboundOrders();
-  }, []);
-
-  const loadInboundOrders = () => {
-    setInboundOrders([
-      {
-        code: 'T20241115_NLPH9',
-        inboundDate: '2024-12-25(수)',
-        inboundOrderDate: '2024-12-16(토)',
-        inboundSimplePlace: '김포냉동(켄달 2층)',
-        inboundPlace:
-          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
-        inboundType: 'NORMAL',
-        inboundStatus: 'READY',
-        products: [
-          {
-            goodsCode: 'MK0000068907',
-            goodsName: '[신선설농탕] 고기 설렁탕',
-            barcode: 'MK0000068907',
-            expiredDate: '2025-02-24',
-            boxCount: 30,
-            unitPerBoxCount: 150,
-            weight: '150g',
-            description: '',
-            imageUrl:
-              'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
-          },
-          {
-            goodsCode: 'MK0000068907',
-            goodsName: '[신선설농탕] 감자 설렁탕',
-            barcode: 'MK0000068908',
-            expiredDate: '2025-02-24',
-            boxCount: 30,
-            unitPerBoxCount: 150,
-            weight: '150g',
-            description: '',
-            imageUrl:
-              'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
-          },
-        ],
-      },
-      {
-        code: 'T20241115_NLQ19',
-        inboundDate: '2024-10-26(화)',
-        inboundOrderDate: '2024-10-30(금)',
-        inboundSimplePlace: '김포냉동(켄달 2층)',
-        inboundPlace:
-          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
-        inboundType: 'NORMAL',
-        inboundStatus: 'END',
-        products: [
-          {
-            goodsCode: 'MK0000068907',
-            goodsName: '[신선설농탕] 고기 설렁탕',
-            barcode: 'MK0000068907',
-            expiredDate: '2025-02-24',
-            boxCount: 30,
-            unitPerBoxCount: 150,
-            weight: '150g',
-            description: '',
-            imageUrl:
-              'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
-          },
-        ],
-      },
-      {
-        code: 'T20241115_NLQ17',
-        inboundDate: '2024-10-26(화)',
-        inboundOrderDate: '2024-10-30(금)',
-        inboundSimplePlace: '김포냉동(켄달 2층)',
-        inboundPlace:
-          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
-        inboundType: 'NORMAL',
-        inboundStatus: 'END',
-        products: [
-          {
-            goodsCode: 'MK0000068907',
-            goodsName: '[신선설농탕] 고기 설렁탕',
-            barcode: 'MK0000068907',
-            expiredDate: '2025-02-24',
-            boxCount: 30,
-            unitPerBoxCount: 150,
-            weight: '150g',
-            description: '',
-            imageUrl:
-              'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
-          },
-        ],
-      },
-      {
-        code: 'T20241115_NLQ11',
-        inboundDate: '2024-10-26(화)',
-        inboundOrderDate: '2024-10-30(금)',
-        inboundSimplePlace: '김포냉동(켄달 2층)',
-        inboundPlace:
-          '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
-        inboundType: 'NORMAL',
-        inboundStatus: 'END',
-        products: [
-          {
-            goodsCode: 'MK0000068907',
-            goodsName: '[신선설농탕] 고기 설렁탕',
-            barcode: 'MK0000068907',
-            expiredDate: '2025-02-24',
-            boxCount: 30,
-            unitPerBoxCount: 150,
-            weight: '150g',
-            description: '',
-            imageUrl:
-              'https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/11f8dda6-b802-4ad8-a675-d55d8ea18c38.jpeg',
-          },
-        ],
-      },
-    ]);
-  };
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
-      loadInboundOrders();
       setRefreshing(false);
     }, 1000); // Simulate a network request
   };
