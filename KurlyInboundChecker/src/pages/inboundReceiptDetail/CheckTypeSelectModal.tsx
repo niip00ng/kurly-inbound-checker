@@ -10,6 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {launchImageLibrary} from 'react-native-image-picker'; // 추가
 
 const width = Dimensions.get('window').width;
 
@@ -24,6 +25,21 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
   onClose,
   selectedCheckTitle,
 }) => {
+  const handleGallerySelection = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo', // 사진만 선택
+      selectionLimit: 1, // 하나의 이미지만 선택
+    });
+
+    if (result.assets && result.assets.length > 0) {
+      const selectedImage = result.assets[0].uri;
+      console.log('선택된 이미지:', selectedImage);
+      // 추가 작업 (예: 업로드, 화면 표시 등)
+    } else {
+      console.log('이미지가 선택되지 않았습니다.');
+    }
+  };
+
   return (
     <Modal
       visible={visible}
@@ -58,7 +74,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.selectCheckType}
-              onPress={onClose}>
+              onPress={handleGallerySelection}>
               <Fontisto
                 name={'picture'}
                 size={16}

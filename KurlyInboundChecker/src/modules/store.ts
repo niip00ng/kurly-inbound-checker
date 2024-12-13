@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import inboundReceiptsReducer from '@pages/home/inboundReceiptsSlice';
+import inboundReceiptsReducer from '../pages/inboundReceiptListView/inboundReceiptsSlice';
 export const store = configureStore({
   reducer: {
     InboundReceipts: inboundReceiptsReducer,

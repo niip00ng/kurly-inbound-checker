@@ -3,10 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {View} from 'react-native';
-import Splash from './src/pages/splash';
+import Splash from '@pages/splash';
 import Main from '@pages/main';
-import {store} from './src/modules/store';
-import InboundReceipt from '@pages/inboundReceipt';
+import {store} from '@modules/store';
+import InboundReceipt from '@pages/inboundReceiptDetail';
 import {Provider} from 'react-redux';
 function App(): React.JSX.Element {
   const RootStack = createNativeStackNavigator();

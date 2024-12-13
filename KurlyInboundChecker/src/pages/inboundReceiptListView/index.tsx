@@ -15,7 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector} from 'react-redux';
 import {RootState} from '@modules/store';
-import {InboundReceiptItem} from '@pages/home/inboundReceiptsSlice';
+import {InboundReceiptItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 
 const Home = () => {
   const inboundReceipts: Array<InboundReceiptItem> = useSelector(

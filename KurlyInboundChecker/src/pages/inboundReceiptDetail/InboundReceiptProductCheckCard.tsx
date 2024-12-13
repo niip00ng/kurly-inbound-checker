@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ProductInfo} from '@pages/home/inboundReceiptsSlice';
-import {ProductCheckItem} from '@pages/home/inboundReceiptsSlice';
+import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
+import {ProductCheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
 
 interface InboundReceiptProductCheckCardProps {

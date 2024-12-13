@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {Platform, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   GestureHandlerRootView,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
-import Home from '@pages/home';
+import inboundReceiptListView from '@pages/inboundReceiptListView';
 import Settings from '@pages/settings';
 import DeviceInfo from 'react-native-device-info';
 import TabIcon from './TabIcon';
@@ -46,7 +46,7 @@ const Main = (props: any) => {
         {state.routes.map((route: {key: string; name: string}, index: any) => {
           const icon = (name: string, selectIndex: number) => {
             const active = () => state.index === selectIndex;
-            if (name === 'Home') {
+            if (name === 'inboundReceiptListView') {
               return (
                 <TabIcon
                   icon={
@@ -98,8 +98,8 @@ const Main = (props: any) => {
           return <TabOption {...{...tabProps, props}} />;
         }}>
         <Tab.Screen
-          component={Home}
-          name="Home"
+          component={inboundReceiptListView}
+          name="inboundReceiptListView"
           options={{
             header: () => <CustomHeader title="입고 발주서 목록" />, // 커스텀 헤더
           }}
