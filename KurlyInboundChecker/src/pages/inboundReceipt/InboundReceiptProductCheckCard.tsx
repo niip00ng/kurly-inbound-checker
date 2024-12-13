@@ -1,21 +1,11 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {ProductInfo} from '@pages/home/inboundReceiptsSlice';
-import LinearGradient from 'react-native-linear-gradient';
 import {ProductCheckItem} from '@pages/home/inboundReceiptsSlice';
+import CheckTypeSelectModal from './CheckTypeSelectModal';
 
-const width = Dimensions.get('window').width;
 interface InboundReceiptProductCheckCardProps {
   product: ProductInfo;
   index: number;
@@ -112,72 +102,11 @@ const InboundReceiptProductCheckCard: React.FC<
           ))}
         </View>
       )}
-
-      <Modal
+      <CheckTypeSelectModal
         visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <LinearGradient
-            colors={['#C237ED', '#DE6D7E']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={{
-              padding: 2,
-              borderRadius: 20,
-            }}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>체크 방법 선택</Text>
-              <Text style={styles.modalText}>{selectedCheckTitle}</Text>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.selectCheckType}
-                onPress={() => setModalVisible(false)}>
-                <Fontisto
-                  name={'camera'}
-                  size={18}
-                  color={'#ffffff'}
-                  style={{marginRight: 15, marginLeft: 10}}
-                />
-                <Text style={styles.closeButtonText}>카메라 촬영으로 체크</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.selectCheckType}
-                onPress={() => setModalVisible(false)}>
-                <Fontisto
-                  name={'picture'}
-                  size={16}
-                  color={'#ffffff'}
-                  style={{marginRight: 15, marginLeft: 10}}
-                />
-                <Text style={styles.closeButtonText}>갤러리 이미지로 체크</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[styles.selectCheckType, {marginBottom: 40}]}
-                onPress={() => setModalVisible(false)}>
-                <FontAwesome
-                  name={'eye'}
-                  size={22}
-                  color={'#ffffff'}
-                  style={{marginRight: 15, marginLeft: 10}}
-                />
-                <Text style={styles.closeButtonText}>직접 수기 체크</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.closeButton}
-                onPress={() => setModalVisible(false)}>
-                <Text style={styles.closeButtonText}>닫기</Text>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
-        </View>
-      </Modal>
+        onClose={() => setModalVisible(false)}
+        selectedCheckTitle={selectedCheckTitle}
+      />
     </View>
   );
 };
@@ -227,57 +156,6 @@ const styles = StyleSheet.create({
   checkItemText: {
     fontSize: 14,
     color: '#ffffff',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#000000',
-    borderRadius: 20,
-    padding: 20,
-    width: width - 60,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 20,
-  },
-  modalText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-
-  selectCheckType: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    backgroundColor: '#ffffff20',
-    padding: 10,
-    paddingVertical: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  closeButton: {
-    position: 'absolute',
-    bottom: 15,
-    right: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: 'transparent',
-  },
-  closeButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
