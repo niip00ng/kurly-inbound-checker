@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,11 +13,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@modules/store';
 import {InboundReceiptItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
-
+import {fetchInboundReceipts} from './inboundReceiptsThunks';
+import type {AppDispatch} from '@modules/store';
 const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const inboundReceipts: Array<InboundReceiptItem> = useSelector(
     (state: RootState) => state.InboundReceipts.inboundReceipts,
   );
@@ -25,6 +27,10 @@ const Home = () => {
   const navigation: any = useNavigation();
 
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchInboundReceipts());
+  }, [dispatch]);
 
   const onRefresh = () => {
     setRefreshing(true);
