@@ -46,7 +46,7 @@ const initialState: InboundReceiptsState = {
       inboundStatus: 'READY',
       products: [
         {
-          goodsCode: 'MK0000068907',
+          goodsCode: 'MK0000068906',
           goodsName: '[신선설농탕] 고기 설렁탕',
           barcode: 'MK0000068907',
           expiredDate: '2025-02-24',
@@ -85,16 +85,11 @@ const initialState: InboundReceiptsState = {
             },
             {
               id: '6',
-              title: '상품의 모든 바코드가 동일한가?',
-              check: false,
-            },
-            {
-              id: '7',
               title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
               check: false,
             },
             {
-              id: '8',
+              id: '7',
               title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
               check: false,
             },
@@ -140,16 +135,11 @@ const initialState: InboundReceiptsState = {
             },
             {
               id: '6',
-              title: '상품의 모든 바코드가 동일한가?',
-              check: false,
-            },
-            {
-              id: '7',
               title: '상품 라벨지에 한글표시사항이 부착되어 있는가?',
               check: false,
             },
             {
-              id: '8',
+              id: '7',
               title: '상품 라벨지에 상품판매가가 노출되어 있지 않은가?',
               check: false,
             },
@@ -167,7 +157,7 @@ const initialState: InboundReceiptsState = {
       inboundStatus: 'END',
       products: [
         {
-          goodsCode: 'MK0000068907',
+          goodsCode: 'MK0000068909',
           goodsName: '[신선설농탕] 고기 설렁탕',
           barcode: 'MK0000068907',
           expiredDate: '2025-02-24',

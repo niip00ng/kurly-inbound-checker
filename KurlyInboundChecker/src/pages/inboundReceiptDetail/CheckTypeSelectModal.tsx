@@ -14,17 +14,23 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 const width = Dimensions.get('window').width;
+import {updateOneCheckItem} from '../inboundReceiptListView/BookMarkFactoryStorage';
+import {ProductCheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
 
 interface CheckModalProps {
+  inboundReceiptCode: string;
+  goodsCode: string;
   visible: boolean;
   onClose: () => void;
-  selectedCheckTitle: string | null;
+  selectedCheckItem: ProductCheckItem | null;
 }
 
 const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
+  inboundReceiptCode,
+  goodsCode,
   visible,
   onClose,
-  selectedCheckTitle,
+  selectedCheckItem,
 }) => {
   const [manualCheck, setManualCheck] = useState(false);
   const selectCheckTypeOpacity = useRef(new Animated.Value(1)).current;
@@ -99,7 +105,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
           }}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>체크 방법 선택</Text>
-            <Text style={styles.modalText}>{selectedCheckTitle}</Text>
+            <Text style={styles.modalText}>{selectedCheckItem?.title}</Text>
 
             {!manualCheck && (
               <Animated.View
@@ -153,12 +159,33 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
             {manualCheck && (
               <Animated.View
                 style={{
-                  minHeight: 220,
+                  minHeight: 210,
                   opacity: manualCheckOpacity,
+                  display: 'flex',
+                  paddingTop: 50,
                 }}>
-                <Text style={styles.manualCheckText}>
-                  수기체크를 완료해주세요
-                </Text>
+                {/* 완료 버튼 추가 */}
+                <TouchableOpacity
+                  style={styles.completeButton}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    if (selectedCheckItem) {
+                      updateOneCheckItem(inboundReceiptCode, goodsCode, {
+                        ...selectedCheckItem,
+                        check: true,
+                      });
+                    }
+                    setManualCheck(false);
+                    onClose(); // 모달 닫기
+                  }}>
+                  <FontAwesome
+                    name="check"
+                    size={24}
+                    color="#ffffff"
+                    style={{marginRight: 10}}
+                  />
+                  <Text style={styles.completeButtonText}>수기체크 완료</Text>
+                </TouchableOpacity>
               </Animated.View>
             )}
 
@@ -256,6 +283,20 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 15,
+  },
+  completeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4CAF50', // 녹색 버튼
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  completeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
 });
 

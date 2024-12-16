@@ -62,6 +62,7 @@ const InboundReceipt = () => {
 
             {inboundReceipt.products.map((item: ProductInfo, index) => (
               <InboundReceiptProductCheckCard
+                inboundReceiptCode={inboundReceipt.code}
                 key={index}
                 product={item}
                 index={index}

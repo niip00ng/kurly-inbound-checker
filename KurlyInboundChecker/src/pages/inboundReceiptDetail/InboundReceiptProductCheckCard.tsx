@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {ProductCheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
+import {getAllCheckItems} from '../inboundReceiptListView/BookMarkFactoryStorage';
 
 interface InboundReceiptProductCheckCardProps {
+  inboundReceiptCode: string;
   product: ProductInfo;
   index: number;
   selectedIndex: number | null;
@@ -15,14 +17,31 @@ interface InboundReceiptProductCheckCardProps {
 
 const InboundReceiptProductCheckCard: React.FC<
   InboundReceiptProductCheckCardProps
-> = ({product, index, selectedIndex, handlePress}) => {
+> = ({inboundReceiptCode, product, index, selectedIndex, handlePress}) => {
+  const [checkItems, setCheckItems] = useState<Array<ProductCheckItem>>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCheckTitle, setSelectedCheckTitle] = useState<string | null>(
-    null,
-  );
+  const [selectedCheckItem, setSelectedCheckItem] =
+    useState<ProductCheckItem | null>(null);
 
-  const handleCheckItemPress = (title: string) => {
-    setSelectedCheckTitle(title);
+  useEffect(() => {
+    const fetchCheckItems = async () => {
+      try {
+        // 비동기 함수 호출 및 데이터 대기
+        const checkItem = await getAllCheckItems(
+          inboundReceiptCode,
+          product.goodsCode,
+        );
+        setCheckItems(checkItem);
+      } catch (error) {
+        console.error('getAllCheckItems 호출 중 오류:', error);
+      }
+    };
+
+    fetchCheckItems();
+  }, [inboundReceiptCode, product.goodsCode]);
+
+  const handleCheckItemPress = (productCheckItem: ProductCheckItem) => {
+    setSelectedCheckItem(productCheckItem);
     setModalVisible(true);
   };
 
@@ -72,19 +91,21 @@ const InboundReceiptProductCheckCard: React.FC<
             </View>
             <View style={styles.cardRow}>
               <Text style={styles.label}>체크리스트</Text>
-              <Text style={styles.value}>{'1 / 7개 체크완료'}</Text>
+              <Text style={styles.value}>{`${
+                checkItems.filter(e => e.check).length
+              } / ${checkItems.length}개 체크완료`}</Text>
             </View>
           </View>
         </View>
       </TouchableOpacity>
       {selectedIndex === index && (
         <View style={styles.checklistCard}>
-          {product.checkList.map((checkItem: ProductCheckItem, i: number) => (
+          {checkItems.map((checkItem: ProductCheckItem, i: number) => (
             <TouchableOpacity
               activeOpacity={0.7}
               key={i}
               style={styles.checklistRow}
-              onPress={() => handleCheckItemPress(checkItem.title)}>
+              onPress={() => handleCheckItemPress(checkItem)}>
               <MaterialIcons
                 name={'check-circle-outline'}
                 size={16}
@@ -103,9 +124,11 @@ const InboundReceiptProductCheckCard: React.FC<
         </View>
       )}
       <CheckTypeSelectModal
+        inboundReceiptCode={inboundReceiptCode}
+        goodsCode={product.goodsCode}
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        selectedCheckTitle={selectedCheckTitle}
+        selectedCheckItem={selectedCheckItem}
       />
     </View>
   );
