@@ -70,16 +70,12 @@ export const updateOneCheckItem = async (
     // 기존 체크 아이템 리스트 가져오기
     const currentItems = await getAllCheckItems(InboundReceiptCode, goodsCode);
 
-    console.log(currentItems);
     const updatedItems = currentItems.map(checkItem =>
       checkItem.id === item.id ? {...checkItem, ...item} : checkItem,
     );
 
-    console.log(updatedItems);
     // 업데이트된 리스트 저장
     await addCheckItem(InboundReceiptCode, goodsCode, updatedItems);
-
-    console.log('업데이트 완료:', updatedItems);
   } catch (error) {
     console.error('체크 아이템 업데이트 중 오류 발생:', error);
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import React, {useState, useRef, useEffect} from 'react';
 import {
   Modal,
@@ -14,8 +15,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 const width = Dimensions.get('window').width;
-import {updateOneCheckItem} from '../inboundReceiptListView/BookMarkFactoryStorage';
+import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
 import {ProductCheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
+import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@modules/store';
 
 interface CheckModalProps {
   inboundReceiptCode: string;
@@ -32,6 +36,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
   onClose,
   selectedCheckItem,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [manualCheck, setManualCheck] = useState(false);
   const selectCheckTypeOpacity = useRef(new Animated.Value(1)).current;
   const manualCheckOpacity = useRef(new Animated.Value(0)).current;
@@ -88,6 +93,18 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
     }).start(() => setManualCheck(false));
   };
 
+  const postOneCheckItem = async (
+    inboundReceiptCode: string,
+    goodsCode: string,
+    selectedCheckItem: ProductCheckItem,
+  ) => {
+    await updateOneCheckItem(inboundReceiptCode, goodsCode, {
+      ...selectedCheckItem,
+      check: true,
+    });
+
+    dispatch(fetchInboundReceipts());
+  };
   return (
     <Modal
       visible={visible}
@@ -170,7 +187,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
                   activeOpacity={0.7}
                   onPress={() => {
                     if (selectedCheckItem) {
-                      updateOneCheckItem(inboundReceiptCode, goodsCode, {
+                      postOneCheckItem(inboundReceiptCode, goodsCode, {
                         ...selectedCheckItem,
                         check: true,
                       });

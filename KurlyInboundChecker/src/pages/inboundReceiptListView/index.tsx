@@ -40,7 +40,7 @@ const Home = () => {
   };
 
   const handleCardPress = (inboundReceipt: InboundReceiptItem) => {
-    navigation.navigate('InboundReceipt', {inboundReceipt});
+    navigation.navigate('InboundReceiptDetail', {code: inboundReceipt.code});
   };
 
   const renderInboundReciptCard = ({item}: {item: InboundReceiptItem}) => (

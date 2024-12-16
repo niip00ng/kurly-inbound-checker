@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,6 +17,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
+import {RootState} from '~/modules/store';
+import {useSelector} from 'react-redux';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -24,9 +26,15 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const InboundReceipt = () => {
+const InboundReceiptDetail = () => {
   const route = useRoute();
-  const {inboundReceipt} = route.params as {inboundReceipt: InboundReceiptItem};
+  const {code} = route.params as {code: string}; // 단순히 code만 전달받음
+  const inboundReceiptsSlice: Array<InboundReceiptItem> = useSelector(
+    (state: RootState) => state.InboundReceipts.inboundReceipts,
+  );
+
+  const [inboundReceipt, setInboundReceipt] =
+    useState<InboundReceiptItem | null>(null);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -34,6 +42,19 @@ const InboundReceipt = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedIndex(prevIndex => (prevIndex === index ? null : index));
   };
+
+  useEffect(() => {
+    const findReceipt: InboundReceiptItem | undefined =
+      inboundReceiptsSlice.find(receipt => receipt.code === code);
+
+    if (findReceipt) {
+      setInboundReceipt(findReceipt);
+    }
+  }, [inboundReceiptsSlice, code]);
+
+  if (!inboundReceipt) {
+    return <Text>발주서 정보를 찾을 수 없습니다.</Text>;
+  }
 
   return (
     <>
@@ -60,7 +81,7 @@ const InboundReceipt = () => {
               발주 상품 {inboundReceipt.products.length}개
             </Text>
 
-            {inboundReceipt.products.map((item: ProductInfo, index) => (
+            {inboundReceipt.products.map((item: ProductInfo, index: number) => (
               <InboundReceiptProductCheckCard
                 inboundReceiptCode={inboundReceipt.code}
                 key={index}
@@ -77,7 +98,7 @@ const InboundReceipt = () => {
   );
 };
 
-export default InboundReceipt;
+export default InboundReceiptDetail;
 
 const s = StyleSheet.create({
   wrapper: {

@@ -1,7 +1,7 @@
 import {Dispatch} from 'redux';
 import {InboundReceiptItem} from './inboundReceiptsSlice';
 import {setInboundReceipts, setLoadingSlice} from './inboundReceiptsSlice';
-import {getAllCheckItems} from '../inboundReceiptListView/BookMarkFactoryStorage';
+import {getAllCheckItems} from './inboundProductCheckItemStorage';
 
 export const fetchInboundReceipts = () => {
   return async (dispatch: Dispatch): Promise<void> => {
@@ -21,7 +21,7 @@ export const fetchInboundReceipts = () => {
           inboundStatus: 'READY',
           products: [
             {
-              goodsCode: 'MK0000068906',
+              goodsCode: 'MK0000068910',
               goodsName: '[신선설농탕] 고기 설렁탕',
               barcode: 'MK0000068907',
               expiredDate: '2025-02-24',
@@ -71,9 +71,9 @@ export const fetchInboundReceipts = () => {
               ],
             },
             {
-              goodsCode: 'MK0000068907',
+              goodsCode: 'MK0000068914',
               goodsName: '[신선설농탕] 감자 설렁탕',
-              barcode: 'MK0000068908',
+              barcode: 'MK0000068911',
               expiredDate: '2025-02-24',
               boxCount: 30,
               unitPerBoxCount: 150,
@@ -133,7 +133,7 @@ export const fetchInboundReceipts = () => {
           inboundStatus: 'END',
           products: [
             {
-              goodsCode: 'MK0000068909',
+              goodsCode: 'MK0000068912',
               goodsName: '[신선설농탕] 고기 설렁탕',
               barcode: 'MK0000068907',
               expiredDate: '2025-02-24',

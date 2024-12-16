@@ -6,7 +6,7 @@ import {View} from 'react-native';
 import Splash from '@pages/splash';
 import Main from '@pages/main';
 import {store} from '@modules/store';
-import InboundReceipt from '@pages/inboundReceiptDetail';
+import InboundReceiptDetail from '@pages/inboundReceiptDetail';
 import {Provider} from 'react-redux';
 function App(): React.JSX.Element {
   const RootStack = createNativeStackNavigator();
@@ -22,8 +22,8 @@ function App(): React.JSX.Element {
               <RootStack.Screen name="Splash" component={Splash} />
               <RootStack.Screen name="Main" component={Main} />
               <RootStack.Screen
-                name="InboundReceipt"
-                component={InboundReceipt}
+                name="InboundReceiptDetail"
+                component={InboundReceiptDetail}
               />
             </RootStack.Group>
           </RootStack.Navigator>
