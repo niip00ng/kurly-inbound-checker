@@ -12,31 +12,25 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {launchImageLibrary} from 'react-native-image-picker';
 
 const width = Dimensions.get('window').width;
-import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
 import {ProductCheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
-import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '@modules/store';
 
 interface CheckModalProps {
-  inboundReceiptCode: string;
-  goodsCode: string;
   visible: boolean;
   onClose: () => void;
+  clickGallary: () => void;
+  clickManual: () => void;
   selectedCheckItem: ProductCheckItem | null;
 }
 
 const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
-  inboundReceiptCode,
-  goodsCode,
   visible,
   onClose,
+  clickGallary,
+  clickManual,
   selectedCheckItem,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
   const [manualCheck, setManualCheck] = useState(false);
   const selectCheckTypeOpacity = useRef(new Animated.Value(1)).current;
   const manualCheckOpacity = useRef(new Animated.Value(0)).current;
@@ -49,20 +43,6 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
       setManualCheck(false);
     }
   }, [visible]);
-
-  const handleGallerySelection = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 1,
-    });
-
-    if (result.assets && result.assets.length > 0) {
-      const selectedImage = result.assets[0].uri;
-      console.log('선택된 이미지:', selectedImage);
-    } else {
-      console.log('이미지가 선택되지 않았습니다.');
-    }
-  };
 
   const handleManualCheck = () => {
     Animated.timing(selectCheckTypeOpacity, {
@@ -93,23 +73,12 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
     }).start(() => setManualCheck(false));
   };
 
-  const postOneCheckItem = async (
-    inboundReceiptCode: string,
-    goodsCode: string,
-    selectedCheckItem: ProductCheckItem,
-  ) => {
-    await updateOneCheckItem(inboundReceiptCode, goodsCode, {
-      ...selectedCheckItem,
-      check: true,
-    });
-
-    dispatch(fetchInboundReceipts());
-  };
   return (
     <Modal
       visible={visible}
       transparent={true}
       animationType="fade"
+      style={{zIndex: 20}}
       onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <LinearGradient
@@ -147,7 +116,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles.selectCheckType}
-                  onPress={handleGallerySelection}>
+                  onPress={clickGallary}>
                   <Fontisto
                     name={'picture'}
                     size={16}
@@ -185,16 +154,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
                 <TouchableOpacity
                   style={styles.completeButton}
                   activeOpacity={0.7}
-                  onPress={() => {
-                    if (selectedCheckItem) {
-                      postOneCheckItem(inboundReceiptCode, goodsCode, {
-                        ...selectedCheckItem,
-                        check: true,
-                      });
-                    }
-                    setManualCheck(false);
-                    onClose(); // 모달 닫기
-                  }}>
+                  onPress={clickManual}>
                   <FontAwesome
                     name="check"
                     size={24}

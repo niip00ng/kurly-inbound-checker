@@ -17,7 +17,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
-import {RootState} from '~/modules/store';
+import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
 if (
   Platform.OS === 'android' &&

@@ -5,6 +5,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {ProductCheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {getGptCheck} from './api/chatGpt';
+import {getPrompt} from './api/prompt';
+import {useLoading} from '@pages/common/LoadingContext';
+import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
+import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@modules/store';
+import {useToast} from 'react-native-toast-notifications';
 
 interface InboundReceiptProductCheckCardProps {
   inboundReceiptCode: string;
@@ -17,13 +26,75 @@ interface InboundReceiptProductCheckCardProps {
 const InboundReceiptProductCheckCard: React.FC<
   InboundReceiptProductCheckCardProps
 > = ({inboundReceiptCode, product, index, selectedIndex, handlePress}) => {
+  const toast = useToast();
+  const dispatch = useDispatch<AppDispatch>();
   const [modalVisible, setModalVisible] = useState(false);
+  const {showLoading, hideLoading} = useLoading();
   const [selectedCheckItem, setSelectedCheckItem] =
     useState<ProductCheckItem | null>(null);
 
   const handleCheckItemPress = (productCheckItem: ProductCheckItem) => {
     setSelectedCheckItem(productCheckItem);
     setModalVisible(true);
+  };
+
+  const handleGallerySelection = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: 1,
+    });
+
+    if (result.assets && result.assets.length > 0) {
+      const selectedImageUri = result.assets[0].uri;
+
+      console.log('선택된 이미지 URI:', selectedImageUri);
+      showLoading();
+      try {
+        // FormData에 Blob 추가
+        const formData = new FormData();
+        formData.append('file', {
+          uri: selectedImageUri,
+          name: 'selectedImage.jpg',
+          type: 'image/jpeg',
+        });
+
+        if (!selectedCheckItem) {
+          return;
+        }
+        const prompt = getPrompt(selectedCheckItem?.id);
+
+        if (!prompt) {
+          return;
+        }
+        // API 호출
+        const response = await getGptCheck(formData, prompt);
+        console.log('API 응답:', response);
+        hideLoading(); // 로딩 종료
+      } catch (error) {
+        console.error('이미지 처리 중 오류 발생:', error);
+        hideLoading(); // 로딩 종료
+      }
+    } else {
+      console.log('이미지가 선택되지 않았습니다.');
+      hideLoading(); // 로딩 종료
+    }
+  };
+
+  const postOneCheckItem = async (
+    inboundReceiptCode: string,
+    goodsCode: string,
+    selectedCheckItem: ProductCheckItem,
+  ) => {
+    await updateOneCheckItem(inboundReceiptCode, goodsCode, {
+      ...selectedCheckItem,
+      check: true,
+    });
+    toast.show('수기 검수가 완료 되었습니다. 👏', {
+      type: 'info',
+      duration: 2000,
+    });
+
+    dispatch(fetchInboundReceipts());
   };
 
   return (
@@ -105,10 +176,21 @@ const InboundReceiptProductCheckCard: React.FC<
         </View>
       )}
       <CheckTypeSelectModal
-        inboundReceiptCode={inboundReceiptCode}
-        goodsCode={product.goodsCode}
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        clickGallary={() => {
+          handleGallerySelection();
+          setModalVisible(false);
+        }}
+        clickManual={() => {
+          if (selectedCheckItem) {
+            postOneCheckItem(inboundReceiptCode, product.goodsCode, {
+              ...selectedCheckItem,
+              check: true,
+            });
+          }
+          setModalVisible(false);
+        }}
         selectedCheckItem={selectedCheckItem}
       />
     </View>
