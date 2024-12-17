@@ -28,13 +28,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 9000,
     elevation: 10, // Android 우선순위 설정
   },
   loadingContainer: {
     width: 100,
     height: 100,
-    backgroundColor: '#333333',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

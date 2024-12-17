@@ -15,18 +15,18 @@ function App(): React.JSX.Element {
   const RootStack = createNativeStackNavigator();
 
   return (
-    <LoadingProvider>
-      <ToastProvider
-        renderToast={toast => (
-          <View
-            style={{
-              backgroundColor: toast.type === 'info' ? '#ffffff' : toast.type,
-              padding: 10,
-              borderRadius: 8,
-            }}>
-            <Text style={{color: '#000000'}}>{toast.message}</Text>
-          </View>
-        )}>
+    <ToastProvider
+      renderToast={toast => (
+        <View
+          style={{
+            backgroundColor: toast.type === 'info' ? '#ffffff' : toast.type,
+            padding: 10,
+            borderRadius: 8,
+          }}>
+          <Text style={{color: '#000000'}}>{toast.message}</Text>
+        </View>
+      )}>
+      <LoadingProvider>
         <Provider store={store}>
           <NavigationContainer>
             <RootStack.Navigator
@@ -44,8 +44,8 @@ function App(): React.JSX.Element {
           </NavigationContainer>
           <GlobalLoading />
         </Provider>
-      </ToastProvider>
-    </LoadingProvider>
+      </LoadingProvider>
+    </ToastProvider>
   );
 }
 

@@ -11,7 +11,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 const width = Dimensions.get('window').width;
 import {GptResponse} from './api/chatGpt';
-
+import LottieView from 'lottie-react-native';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 interface GptResponseResultModalProps {
   visible: boolean;
   onClose: () => void;
@@ -41,8 +42,33 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
           }}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>이미지 검수 결과</Text>
-            <Text style={styles.modalText}>{gptResponse?.result}</Text>
-            <Text style={styles.modalText}>{gptResponse?.reason}</Text>
+
+            {gptResponse?.result === 'SUCCESS' && (
+              <LottieView
+                source={require('../../../assets/lottie/success_check.json')} // Lottie 파일 경로
+                autoPlay
+                style={styles.lottie}
+              />
+            )}
+            {gptResponse?.result === 'FAIL' && (
+              <LottieView
+                source={require('../../../assets/lottie/error.json')} // Lottie 파일 경로
+                autoPlay
+                style={styles.lottie}
+              />
+            )}
+            {gptResponse?.result === 'UNKNOWN' && (
+              <>
+                <Fontisto
+                  name={'question'}
+                  size={80}
+                  color={'#ffffff'}
+                  style={{marginTop: 20, marginBottom: 40}}
+                />
+                <Text style={styles.modalText}>{gptResponse?.reason}</Text>
+              </>
+            )}
+
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -65,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   modalContent: {
     backgroundColor: '#000000',
@@ -86,7 +112,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 50,
   },
   selectCheckTypeContainer: {
     display: 'flex',
@@ -142,6 +168,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
+  },
+  lottie: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
   },
 });
 

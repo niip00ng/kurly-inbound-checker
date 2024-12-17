@@ -71,6 +71,10 @@ const InboundReceiptProductCheckCard: React.FC<
         }
         // API 호출
         const response: GptResponse = await getGptCheck(formData, prompt);
+
+        if (response.result === 'SUCCESS') {
+          updateCheckItem();
+        }
         setGptResponse(response);
         setGptModalVisible(true);
         console.log('API 응답:', response);
@@ -100,6 +104,15 @@ const InboundReceiptProductCheckCard: React.FC<
     });
 
     dispatch(fetchInboundReceipts());
+  };
+
+  const updateCheckItem = () => {
+    if (selectedCheckItem) {
+      postOneCheckItem(inboundReceiptCode, product.goodsCode, {
+        ...selectedCheckItem,
+        check: true,
+      });
+    }
   };
 
   return (
@@ -188,12 +201,7 @@ const InboundReceiptProductCheckCard: React.FC<
           setModalVisible(false);
         }}
         clickManual={() => {
-          if (selectedCheckItem) {
-            postOneCheckItem(inboundReceiptCode, product.goodsCode, {
-              ...selectedCheckItem,
-              check: true,
-            });
-          }
+          updateCheckItem();
           setModalVisible(false);
         }}
         selectedCheckItem={selectedCheckItem}
