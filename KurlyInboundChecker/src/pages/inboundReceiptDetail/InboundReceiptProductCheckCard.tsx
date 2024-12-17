@@ -6,7 +6,7 @@ import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {ProductCheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {getGptCheck} from './api/chatGpt';
+import {getGptCheck, GptResponse} from './api/chatGpt';
 import {getPrompt} from './api/prompt';
 import {useLoading} from '@pages/common/LoadingContext';
 import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
@@ -14,6 +14,7 @@ import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThu
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
+import GptResponseResultModal from './GptResponseResultModal';
 
 interface InboundReceiptProductCheckCardProps {
   inboundReceiptCode: string;
@@ -28,8 +29,10 @@ const InboundReceiptProductCheckCard: React.FC<
 > = ({inboundReceiptCode, product, index, selectedIndex, handlePress}) => {
   const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
-  const [modalVisible, setModalVisible] = useState(false);
   const {showLoading, hideLoading} = useLoading();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [gptModalVisible, setGptModalVisible] = useState(false);
+  const [gptResponse, setGptResponse] = useState<GptResponse | null>(null);
   const [selectedCheckItem, setSelectedCheckItem] =
     useState<ProductCheckItem | null>(null);
 
@@ -67,7 +70,9 @@ const InboundReceiptProductCheckCard: React.FC<
           return;
         }
         // API 호출
-        const response = await getGptCheck(formData, prompt);
+        const response: GptResponse = await getGptCheck(formData, prompt);
+        setGptResponse(response);
+        setGptModalVisible(true);
         console.log('API 응답:', response);
         hideLoading(); // 로딩 종료
       } catch (error) {
@@ -192,6 +197,11 @@ const InboundReceiptProductCheckCard: React.FC<
           setModalVisible(false);
         }}
         selectedCheckItem={selectedCheckItem}
+      />
+      <GptResponseResultModal
+        visible={gptModalVisible}
+        onClose={() => setGptModalVisible(false)}
+        gptResponse={gptResponse}
       />
     </View>
   );
