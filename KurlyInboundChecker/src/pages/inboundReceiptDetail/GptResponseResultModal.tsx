@@ -47,15 +47,18 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
               <LottieView
                 source={require('../../../assets/lottie/success_check.json')} // Lottie 파일 경로
                 autoPlay
-                style={styles.lottie}
+                style={[{marginBottom: 40}, styles.lottie]}
               />
             )}
             {gptResponse?.result === 'FAIL' && (
-              <LottieView
-                source={require('../../../assets/lottie/error.json')} // Lottie 파일 경로
-                autoPlay
-                style={styles.lottie}
-              />
+              <>
+                <LottieView
+                  source={require('../../../assets/lottie/error.json')} // Lottie 파일 경로
+                  autoPlay
+                  style={styles.lottie}
+                />
+                <Text style={styles.modalText}>{gptResponse?.reason}</Text>
+              </>
             )}
             {gptResponse?.result === 'UNKNOWN' && (
               <>
@@ -172,7 +175,6 @@ const styles = StyleSheet.create({
   lottie: {
     width: 150,
     height: 150,
-    marginBottom: 40,
   },
 });
 

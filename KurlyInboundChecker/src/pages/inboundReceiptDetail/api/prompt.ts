@@ -24,7 +24,7 @@ export function getPrompt(checkId: string) {
     return `다음 정보를 확인하세요. 이 정보는 박스에 있는 바코드를 전부 찾아주세요.
     응답은 반드시 아래 룰을 지켜줘
     - 모든 바코드가 일치 한 경우:   {"result": "SUCCESS", "reason": ""}  
-    - 어떤 하나의 바코드라도 다른 경우:   {"result": "FAIL", "reason": ""}  
+    - 어떤 하나의 바코드라도 다른 경우 (이유는 reason에 추가):   {"result": "FAIL", "reason": ""}  
     - 알수 없는 경우 (이유는 reason에 추가) :   {"result": "UNKNOWN", "reason": ""}`;
   } else if (checkId === '6') {
     //상품 라벨지에 한글표시사항이 부착되어 있는가?
