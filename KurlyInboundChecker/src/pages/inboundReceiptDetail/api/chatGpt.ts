@@ -38,7 +38,7 @@ export function getAllPictureCheck(
   formData: FormData,
   barcodeNumber: string,
   expiredDate: string,
-): Promise<GptProductCheckResponse> {
+): Promise<Array<GptProductCheckResponse>> {
   return new Promise((resolve, reject) => {
     axiosInstance
       .post(

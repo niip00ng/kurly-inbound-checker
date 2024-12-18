@@ -29,6 +29,7 @@ import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
 import GptResponseResultModal from './GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import GptMultiResponseResultModal from './GptMultiResponseResultModal';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -49,8 +50,12 @@ const InboundReceiptProductCheckCard: React.FC<
   const {showLoading, hideLoading} = useLoading();
   const [modalVisible, setModalVisible] = useState(false);
   const [gptModalVisible, setGptModalVisible] = useState(false);
+  const [gptMultiModalVisible, setGptMultiModalVisible] = useState(false);
   const [spreadYn, setSpreadYn] = useState(false);
   const [gptResponse, setGptResponse] = useState<GptResponse | null>(null);
+  const [gptMulitChecks, setGptMultiChecks] = useState<
+    Array<GptProductCheckResponse>
+  >([]);
   const [selectedCheckItem, setSelectedCheckItem] = useState<CheckItem | null>(
     null,
   );
@@ -148,14 +153,18 @@ const InboundReceiptProductCheckCard: React.FC<
         });
 
         console.log(product.barcode, product.expiredDate, formData);
-        const response: GptProductCheckResponse = await getAllPictureCheck(
-          formData,
-          product.barcode,
-          product.expiredDate,
-        );
-
-        console.log(response);
-
+        const response: Array<GptProductCheckResponse> =
+          await getAllPictureCheck(
+            formData,
+            product.barcode,
+            product.expiredDate,
+          );
+        setGptMultiChecks(response);
+        setGptMultiModalVisible(true);
+        // postOneCheckItem(inboundReceiptCode, product.goodsCode, {
+        //   ...selectedCheckItem,
+        //   check: true,
+        // });
         hideLoading(); // 로딩 종료
       } catch (error) {
         console.error('이미지 처리 중 오류 발생:', error);
@@ -308,6 +317,13 @@ const InboundReceiptProductCheckCard: React.FC<
         visible={gptModalVisible}
         onClose={() => setGptModalVisible(false)}
         gptResponse={gptResponse}
+      />
+      <GptMultiResponseResultModal
+        visible={gptMultiModalVisible}
+        onClose={() => setGptMultiModalVisible(false)}
+        inboundReceiptCode={inboundReceiptCode}
+        product={product}
+        gptMultiChecks={gptMulitChecks}
       />
     </View>
   );
