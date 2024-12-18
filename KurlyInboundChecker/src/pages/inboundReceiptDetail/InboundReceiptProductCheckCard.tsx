@@ -41,6 +41,15 @@ const InboundReceiptProductCheckCard: React.FC<
     setModalVisible(true);
   };
 
+  const getChecklistTextColor = (checkList: {check: boolean}[]) => {
+    const completedCount = checkList.filter(e => e.check).length;
+    return completedCount === checkList.length ? '#A1D9AE' : '#999999';
+  };
+
+  const completedCount = product.checkList.filter(e => e.check).length;
+  const totalCount = product.checkList.length;
+  const checklistTextColor = getChecklistTextColor(product.checkList);
+
   const handleGallerySelection = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -161,9 +170,9 @@ const InboundReceiptProductCheckCard: React.FC<
             </View>
             <View style={styles.cardRow}>
               <Text style={styles.label}>체크리스트</Text>
-              <Text style={styles.value}>{`${
-                product.checkList.filter(e => e.check).length
-              } / ${product.checkList.length}개 체크완료`}</Text>
+              <Text style={[styles.value, {color: checklistTextColor}]}>
+                {`${completedCount} / ${totalCount}개 체크완료`}
+              </Text>
             </View>
           </View>
         </View>
@@ -185,7 +194,12 @@ const InboundReceiptProductCheckCard: React.FC<
               <Text
                 style={[
                   styles.checkItemText,
-                  {color: checkItem.check ? '#ffffff' : '#999999'},
+                  {
+                    color: checkItem.check ? '#ffffff' : '#999999',
+                    textDecorationLine: !checkItem.check
+                      ? 'none'
+                      : 'line-through', // checkItem.check가 false일 때 취소선 추가
+                  },
                 ]}>
                 {checkItem.title}
               </Text>
