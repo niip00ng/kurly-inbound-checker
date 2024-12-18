@@ -1,8 +1,7 @@
 import {getItem, setItem} from '@modules/storage';
 import {CheckItem} from './inboundReceiptsSlice';
 
-const INBOUND_RECEIPT_PRODUCT_CHECK_ITEM =
-  'INBOUND_RECEIPT_PRODUCT_CHECK_ITEM:';
+const INBOUND_EXBOX_CHECK_ITEM = 'INBOUND_EXBOX_CHECK_ITEM:';
 const defaultCheckItems = [
   {
     id: '1',
@@ -51,42 +50,39 @@ const defaultCheckItems = [
   },
 ];
 
-export const getAllCheckItems = async (
+export const getAllExboxCheckItems = async (
   InboundReceiptCode: string,
-  goodsCode: string,
 ): Promise<Array<CheckItem>> => {
   const result = await getItem<Array<CheckItem>>(
-    INBOUND_RECEIPT_PRODUCT_CHECK_ITEM + InboundReceiptCode + ':' + goodsCode,
+    INBOUND_EXBOX_CHECK_ITEM + InboundReceiptCode,
   );
 
   return result || defaultCheckItems;
 };
 
-export const addCheckItem = (
+export const addExboxCheckItem = (
   InboundReceiptCode: string,
-  goodsCode: string,
   value: Array<CheckItem>,
 ) =>
   setItem<Array<CheckItem>>(
-    INBOUND_RECEIPT_PRODUCT_CHECK_ITEM + InboundReceiptCode + ':' + goodsCode,
+    INBOUND_EXBOX_CHECK_ITEM + InboundReceiptCode,
     value,
   );
 
-export const updateOneCheckItem = async (
+export const updateOneExboxCheckItem = async (
   InboundReceiptCode: string,
-  goodsCode: string,
   item: CheckItem,
 ) => {
   try {
     // 기존 체크 아이템 리스트 가져오기
-    const currentItems = await getAllCheckItems(InboundReceiptCode, goodsCode);
+    const currentItems = await getAllExboxCheckItems(InboundReceiptCode);
 
     const updatedItems = currentItems.map(checkItem =>
       checkItem.id === item.id ? {...checkItem, ...item} : checkItem,
     );
 
     // 업데이트된 리스트 저장
-    await addCheckItem(InboundReceiptCode, goodsCode, updatedItems);
+    await addExboxCheckItem(InboundReceiptCode, updatedItems);
   } catch (error) {
     console.error('체크 아이템 업데이트 중 오류 발생:', error);
   }

@@ -139,29 +139,42 @@ const Home = () => {
         </View>
 
         <View>
-          {item.products.map((product, index) => (
-            <View
-              key={index}
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 4,
-              }}>
-              <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
-                {product.goodsName}
-              </Text>
-              {/* <FastImage
+          {item.products.map((product, index) => {
+            const getChecklistStatus = () => {
+              return (
+                product.checkList.length ===
+                product.checkList.filter(e => e.check).length
+              );
+            };
+
+            return (
+              <View
+                key={index}
                 style={{
-                  marginLeft: 10,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 5,
-                }}
-                source={{uri: product.imageUrl}}
-              /> */}
-            </View>
-          ))}
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 4,
+                }}>
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    fontWeight: getChecklistStatus() ? 'bold' : '300',
+                  }}>
+                  {product.goodsName} {getChecklistStatus()}
+                </Text>
+                {/* <FastImage
+                      style={{
+                        marginLeft: 10,
+                        width: 30,
+                        height: 30,
+                        borderRadius: 5,
+                      }}
+                      source={{uri: product.imageUrl}}
+                    /> */}
+              </View>
+            );
+          })}
         </View>
       </View>
     </TouchableOpacity>

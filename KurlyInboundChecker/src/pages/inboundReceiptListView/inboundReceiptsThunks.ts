@@ -21,9 +21,9 @@ export const fetchInboundReceipts = () => {
           inboundStatus: 'READY',
           products: [
             {
-              goodsCode: 'MK0000068910',
+              goodsCode: 'MK0000068920',
               goodsName: '[신선설농탕] 고기 설렁탕',
-              barcode: 'MK0000068907',
+              barcode: '8802266186502',
               expiredDate: '2025-02-24',
               boxCount: 30,
               unitPerBoxCount: 150,
@@ -34,9 +34,9 @@ export const fetchInboundReceipts = () => {
               checkList: [],
             },
             {
-              goodsCode: 'MK0000068914',
+              goodsCode: 'MK0000068921',
               goodsName: '[신선설농탕] 감자 설렁탕',
-              barcode: 'MK0000068911',
+              barcode: '8802266186502',
               expiredDate: '2025-02-24',
               boxCount: 30,
               unitPerBoxCount: 150,
@@ -55,13 +55,13 @@ export const fetchInboundReceipts = () => {
           inboundSimplePlace: '김포냉동(켄달 2층)',
           inboundPlace:
             '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
-          inboundType: 'NORMAL',
+          inboundType: 'PARCEL',
           inboundStatus: 'END',
           products: [
             {
-              goodsCode: 'MK0000068912',
+              goodsCode: 'MK0000068922',
               goodsName: '[신선설농탕] 고기 설렁탕',
-              barcode: 'MK0000068907',
+              barcode: '8802266186502',
               expiredDate: '2025-02-24',
               boxCount: 30,
               unitPerBoxCount: 150,

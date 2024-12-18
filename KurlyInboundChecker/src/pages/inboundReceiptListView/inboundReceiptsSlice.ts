@@ -10,7 +10,7 @@ export interface ProductInfo {
   expiredDate: string;
   description: string;
   imageUrl: string;
-  checkList: Array<ProductCheckItem>;
+  checkList: Array<CheckItem>;
 }
 
 export interface InboundReceiptItem {
@@ -29,7 +29,7 @@ export interface InboundReceiptsState {
   inboundReceipts: Array<InboundReceiptItem>;
 }
 
-export interface ProductCheckItem {
+export interface CheckItem {
   id: string;
   title: string;
   check: boolean;

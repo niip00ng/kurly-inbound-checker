@@ -1,12 +1,25 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+  UIManager,
+  LayoutAnimation,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
-import {ProductCheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
+import {CheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {getGptCheck, GptResponse} from './api/chatGpt';
+import {
+  getAllPictureCheck,
+  getGptCheck,
+  GptProductCheckResponse,
+  GptResponse,
+} from './api/chatGpt';
 import {getPrompt} from './api/prompt';
 import {useLoading} from '@pages/common/LoadingContext';
 import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
@@ -15,28 +28,40 @@ import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
 import GptResponseResultModal from './GptResponseResultModal';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 interface InboundReceiptProductCheckCardProps {
   inboundReceiptCode: string;
   product: ProductInfo;
-  index: number;
-  selectedIndex: number | null;
-  handlePress: (index: number) => void;
 }
 
 const InboundReceiptProductCheckCard: React.FC<
   InboundReceiptProductCheckCardProps
-> = ({inboundReceiptCode, product, index, selectedIndex, handlePress}) => {
+> = ({inboundReceiptCode, product}) => {
   const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
   const {showLoading, hideLoading} = useLoading();
   const [modalVisible, setModalVisible] = useState(false);
   const [gptModalVisible, setGptModalVisible] = useState(false);
+  const [spreadYn, setSpreadYn] = useState(false);
   const [gptResponse, setGptResponse] = useState<GptResponse | null>(null);
-  const [selectedCheckItem, setSelectedCheckItem] =
-    useState<ProductCheckItem | null>(null);
+  const [selectedCheckItem, setSelectedCheckItem] = useState<CheckItem | null>(
+    null,
+  );
 
-  const handleCheckItemPress = (productCheckItem: ProductCheckItem) => {
+  const handlePress = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    setSpreadYn(!spreadYn);
+  };
+
+  const handleCheckItemPress = (productCheckItem: CheckItem) => {
     setSelectedCheckItem(productCheckItem);
     setModalVisible(true);
   };
@@ -59,9 +84,8 @@ const InboundReceiptProductCheckCard: React.FC<
     if (result.assets && result.assets.length > 0) {
       const selectedImageUri = result.assets[0].uri;
 
-      console.log('선택된 이미지 URI:', selectedImageUri);
-      showLoading();
       try {
+        showLoading();
         // FormData에 Blob 추가
         const formData = new FormData();
         formData.append('file', {
@@ -78,19 +102,21 @@ const InboundReceiptProductCheckCard: React.FC<
         if (!prompt) {
           return;
         }
-        // API 호출
+
         const response: GptResponse = await getGptCheck(formData, prompt);
 
         if (response.result === 'SUCCESS') {
           updateCheckItem();
         }
+
         setGptResponse(response);
         setGptModalVisible(true);
         console.log('API 응답:', response);
         hideLoading(); // 로딩 종료
       } catch (error) {
         console.error('이미지 처리 중 오류 발생:', error);
-        hideLoading(); // 로딩 종료
+      } finally {
+        hideLoading();
       }
     } else {
       console.log('이미지가 선택되지 않았습니다.');
@@ -98,10 +124,52 @@ const InboundReceiptProductCheckCard: React.FC<
     }
   };
 
+  const handleGalleryMultiSelection = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: 10,
+    });
+
+    if (result.assets && result.assets.length > 0) {
+      console.log(
+        '선택된 이미지 URI:',
+        result.assets.map(asset => asset.uri),
+      );
+      showLoading();
+      try {
+        // 여러 장 이미지 처리 로직 추가
+        const formData = new FormData();
+        result.assets.forEach((asset, index) => {
+          formData.append('files', {
+            uri: asset.uri,
+            name: `selectedImage_${index}.jpg`,
+            type: 'image/jpeg',
+          });
+        });
+
+        console.log(product.barcode, product.expiredDate, formData);
+        const response: GptProductCheckResponse = await getAllPictureCheck(
+          formData,
+          product.barcode,
+          product.expiredDate,
+        );
+
+        console.log(response);
+
+        hideLoading(); // 로딩 종료
+      } catch (error) {
+        console.error('이미지 처리 중 오류 발생:', error);
+        hideLoading(); // 로딩 종료
+      }
+    } else {
+      console.log('이미지가 선택되지 않았습니다.');
+    }
+  };
+
   const postOneCheckItem = async (
     inboundReceiptCode: string,
     goodsCode: string,
-    selectedCheckItem: ProductCheckItem,
+    selectedCheckItem: CheckItem,
   ) => {
     await updateOneCheckItem(inboundReceiptCode, goodsCode, {
       ...selectedCheckItem,
@@ -125,11 +193,11 @@ const InboundReceiptProductCheckCard: React.FC<
   };
 
   return (
-    <View key={index} style={{marginBottom: 20}}>
+    <View style={{marginBottom: 20}}>
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.productContainer}
-        onPress={() => handlePress(index)}>
+        onPress={() => handlePress()}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
           <FastImage
             style={styles.productImage}
@@ -177,35 +245,51 @@ const InboundReceiptProductCheckCard: React.FC<
           </View>
         </View>
       </TouchableOpacity>
-      {selectedIndex === index && (
-        <View style={styles.checklistCard}>
-          {product.checkList.map((checkItem: ProductCheckItem, i: number) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              key={i}
-              style={styles.checklistRow}
-              onPress={() => handleCheckItemPress(checkItem)}>
-              <MaterialIcons
-                name={'check-circle-outline'}
-                size={16}
-                color={checkItem.check ? '#ffffff' : '#999999'}
-                style={{marginRight: 5, marginLeft: 1}}
-              />
-              <Text
-                style={[
-                  styles.checkItemText,
-                  {
-                    color: checkItem.check ? '#ffffff' : '#999999',
-                    textDecorationLine: !checkItem.check
-                      ? 'none'
-                      : 'line-through', // checkItem.check가 false일 때 취소선 추가
-                  },
-                ]}>
-                {checkItem.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+      {spreadYn && (
+        <>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.selectCheckType}
+            onPress={handleGalleryMultiSelection}>
+            <FontAwesome5
+              name={'images'}
+              size={16}
+              color={'#ffffff'}
+              style={{marginRight: 15, marginLeft: 10}}
+            />
+            <Text style={styles.closeButtonText}>
+              여러장 이미지로 일괄 체크하기
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.checklistCard}>
+            {product.checkList.map((checkItem: CheckItem, i: number) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                key={i}
+                style={styles.checklistRow}
+                onPress={() => handleCheckItemPress(checkItem)}>
+                <MaterialIcons
+                  name={'check-circle-outline'}
+                  size={16}
+                  color={checkItem.check ? '#ffffff' : '#999999'}
+                  style={{marginRight: 5, marginLeft: 1}}
+                />
+                <Text
+                  style={[
+                    styles.checkItemText,
+                    {
+                      color: checkItem.check ? '#ffffff' : '#999999',
+                      textDecorationLine: !checkItem.check
+                        ? 'none'
+                        : 'line-through', // checkItem.check가 false일 때 취소선 추가
+                    },
+                  ]}>
+                  {checkItem.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </>
       )}
       <CheckTypeSelectModal
         visible={modalVisible}
@@ -261,9 +345,9 @@ const styles = StyleSheet.create({
   },
   checklistCard: {
     backgroundColor: '#ffffff10',
-    borderRadius: 10,
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
     padding: 10,
-    marginTop: 10,
   },
   checklistRow: {
     marginBottom: 5,
@@ -272,8 +356,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   checkItemText: {
+    paddingRight: 15,
     fontSize: 14,
     color: '#ffffff',
+  },
+  selectCheckType: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: '#ffffff20',
+    padding: 10,
+    paddingVertical: 15,
+    marginTop: 10,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
+  },
+  closeButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

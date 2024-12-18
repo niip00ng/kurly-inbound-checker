@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  LayoutAnimation,
-  Platform,
-  UIManager,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import TopComponent from '../TopComponent';
 import {
@@ -19,12 +11,6 @@ import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
 import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
-if (
-  Platform.OS === 'android' &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 const InboundReceiptDetail = () => {
   const route = useRoute();
@@ -36,13 +22,6 @@ const InboundReceiptDetail = () => {
   const [inboundReceipt, setInboundReceipt] =
     useState<InboundReceiptItem | null>(null);
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const handlePress = (index: number) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setSelectedIndex(prevIndex => (prevIndex === index ? null : index));
-  };
-
   useEffect(() => {
     const findReceipt: InboundReceiptItem | undefined =
       inboundReceiptsSlice.find(receipt => receipt.code === code);
@@ -53,13 +32,22 @@ const InboundReceiptDetail = () => {
   }, [inboundReceiptsSlice, code]);
 
   if (!inboundReceipt) {
-    return <Text>발주서 정보를 찾을 수 없습니다.</Text>;
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#333333',
+        }}>
+        <Text>발주서 정보를 찾을 수 없습니다.</Text>
+      </View>
+    );
   }
 
   return (
     <>
       <TopComponent
-        titleComponrnt={<Text style={s.title}>발주서 상세정보</Text>}
+        titleComponrnt={<Text style={s.title}>발주서 체크리스트</Text>}
       />
       <View style={s.wrapper}>
         <LinearGradient colors={['#333333', '#000000']}>
@@ -77,19 +65,24 @@ const InboundReceiptDetail = () => {
               inboundType={inboundReceipt.inboundType}
               inboundStatus={inboundReceipt.inboundStatus}
             />
+            {inboundReceipt.inboundType === 'PARCEL' && (
+              <Text style={s.subTitle}>택배입고</Text>
+            )}
+            {inboundReceipt.inboundType === 'NORMAL' && (
+              <Text style={s.subTitle}>일반입고</Text>
+            )}
+
             <Text style={s.subTitle}>
               발주 상품 {inboundReceipt.products.length}개
             </Text>
 
             {inboundReceipt.products.map((item: ProductInfo, index: number) => (
-              <InboundReceiptProductCheckCard
-                inboundReceiptCode={inboundReceipt.code}
-                key={index}
-                product={item}
-                index={index}
-                selectedIndex={selectedIndex}
-                handlePress={handlePress}
-              />
+              <View key={index}>
+                <InboundReceiptProductCheckCard
+                  inboundReceiptCode={inboundReceipt.code}
+                  product={item}
+                />
+              </View>
             ))}
           </ScrollView>
         </LinearGradient>

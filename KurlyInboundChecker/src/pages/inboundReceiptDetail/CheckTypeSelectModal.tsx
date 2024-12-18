@@ -14,14 +14,14 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const width = Dimensions.get('window').width;
-import {ProductCheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
+import {CheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
 
 interface CheckModalProps {
   visible: boolean;
   onClose: () => void;
   clickGallary: () => void;
   clickManual: () => void;
-  selectedCheckItem: ProductCheckItem | null;
+  selectedCheckItem: CheckItem | null;
 }
 
 const CheckTypeSelectModal: React.FC<CheckModalProps> = ({

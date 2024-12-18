@@ -1,5 +1,5 @@
 export function getPrompt(checkId: string) {
-  if (checkId === '1') {
+  if (checkId === '') {
     //발주서와 상품의 종류 및 수량이 일치하는가?
     return `다음 정보를 확인하세요. 이 정보는 박스에 있는 **한국어 라벨**에 적힌 내용입니다.  
     1. **상품명**이 강냉이 가 맞는지 확인합니다.   
