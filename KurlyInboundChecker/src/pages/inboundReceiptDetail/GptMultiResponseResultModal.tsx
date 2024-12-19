@@ -17,15 +17,12 @@ import {
 } from '../inboundReceiptListView/inboundReceiptsSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {
-  addCheckItem,
-  updateOneCheckItem,
-} from '../inboundReceiptListView/inboundProductCheckItemStorage';
+import {addCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
 import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
 
-interface GptMultiResponseResultModalProps {
+interface Props {
   visible: boolean;
   onClose: () => void;
   inboundReceiptCode: string;
@@ -33,9 +30,13 @@ interface GptMultiResponseResultModalProps {
   gptMultiChecks: Array<GptProductCheckResponse>;
 }
 
-const GptMultiResponseResultModal: React.FC<
-  GptMultiResponseResultModalProps
-> = ({visible, onClose, inboundReceiptCode, product, gptMultiChecks}) => {
+const GptMultiResponseResultModal: React.FC<Props> = ({
+  visible,
+  onClose,
+  inboundReceiptCode,
+  product,
+  gptMultiChecks,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [displayedItems, setDisplayedItems] = useState<boolean[]>([]);
 

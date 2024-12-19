@@ -23,7 +23,7 @@ const defaultNormalCheckItems = [
 
 const defaultParcelCheckItems = [
   {
-    id: '1',
+    id: 'parcel_label_exist',
     title: '입고라벨지가 박스에 부착되어 있어야 합니다.',
     check: false,
   },
@@ -33,7 +33,7 @@ const defaultParcelCheckItems = [
     check: false,
   },
   {
-    id: '3',
+    id: 'invoice_dock_exist',
     title: '발주서의 입고 주소와 송장 주소가 일치해야합니다. (도크 번호 필수)',
     check: false,
   },

@@ -13,9 +13,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {CheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {
-  getAllPictureCheck,
+  getAllPictureProductCheck,
   getGptCheck,
   GptProductCheckResponse,
   GptResponse,
@@ -31,6 +30,11 @@ import GptResponseResultModal from './GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GptMultiResponseResultModal from './GptMultiResponseResultModal';
+import {
+  createFormDataFromImages,
+  pickMultipleImages,
+  pickSingleImage,
+} from '../common/imagePickerUtil';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -82,127 +86,86 @@ const InboundReceiptProductCheckCard: React.FC<
   const checklistTextColor = getChecklistTextColor(product.checkList);
 
   const handleGallerySelection = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 1,
-    });
+    try {
+      showLoading();
+      const selectedImageUri = await pickSingleImage();
 
-    if (result.assets && result.assets.length > 0) {
-      const selectedImageUri = result.assets[0].uri;
+      const formData = createFormDataFromImages(
+        [
+          {
+            uri: selectedImageUri,
+            name: 'selectedImage.jpg',
+            type: 'image/jpeg',
+          },
+        ],
+        'file',
+      );
 
-      try {
-        showLoading();
-        // FormData에 Blob 추가
-        const formData = new FormData();
-        formData.append('file', {
-          uri: selectedImageUri,
-          name: 'selectedImage.jpg',
-          type: 'image/jpeg',
-        });
-
-        if (!selectedCheckItem) {
-          return;
-        }
-        const prompt = getProductCheckPrompt(
-          selectedCheckItem?.id,
-          product.barcode,
-          product.expiredDate,
-        );
-
-        if (!prompt) {
-          return;
-        }
-
-        const response: GptResponse = await getGptCheck(formData, prompt);
-        console.log(response);
-        if (response.result === 'pass') {
-          updateCheckItem();
-        }
-
-        setGptResponse(response);
-        setGptModalVisible(true);
-        console.log('API 응답:', response);
-        hideLoading(); // 로딩 종료
-      } catch (error) {
-        console.error('이미지 처리 중 오류 발생:', error);
-      } finally {
-        hideLoading();
+      if (!selectedCheckItem) {
+        return;
       }
-    } else {
-      console.log('이미지가 선택되지 않았습니다.');
+
+      const prompt = getProductCheckPrompt(
+        selectedCheckItem?.id,
+        product.barcode,
+        product.expiredDate,
+      );
+
+      if (!prompt) {
+        return;
+      }
+
+      const response: GptResponse = await getGptCheck(formData, prompt);
+
+      if (response.result === 'pass') {
+        updateCheckItem();
+      }
+
+      setGptResponse(response);
+      setGptModalVisible(true);
+      console.log('API 응답:', response);
+    } catch (error) {
+      console.error('이미지 처리 중 오류 발생:', error);
+    } finally {
       hideLoading(); // 로딩 종료
     }
   };
 
   const handleGalleryMultiSelection = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 10,
-    });
-
-    if (result.assets && result.assets.length > 0) {
-      console.log(
-        '선택된 이미지 URI:',
-        result.assets.map(asset => asset.uri),
-      );
+    try {
       showLoading();
-      try {
-        // 여러 장 이미지 처리 로직 추가
-        const formData = new FormData();
-        result.assets.forEach((asset, index) => {
-          formData.append('files', {
-            uri: asset.uri,
-            name: `selectedImage_${index}.jpg`,
-            type: 'image/jpeg',
-          });
-        });
+      const selectedImages = await pickMultipleImages();
 
-        console.log(product.barcode, product.expiredDate, formData);
-        const response: Array<GptProductCheckResponse> =
-          await getAllPictureCheck(
-            formData,
-            product.barcode,
-            product.expiredDate,
-          );
-        setGptMultiChecks(response);
-        setGptMultiModalVisible(true);
-        // postOneCheckItem(inboundReceiptCode, product.goodsCode, {
-        //   ...selectedCheckItem,
-        //   check: true,
-        // });
-        hideLoading(); // 로딩 종료
-      } catch (error) {
-        console.error('이미지 처리 중 오류 발생:', error);
-        hideLoading(); // 로딩 종료
-      }
-    } else {
-      console.log('이미지가 선택되지 않았습니다.');
+      const formData = createFormDataFromImages(selectedImages, 'files');
+
+      console.log(product.barcode, product.expiredDate, formData);
+      const response: Array<GptProductCheckResponse> =
+        await getAllPictureProductCheck(
+          formData,
+          product.barcode,
+          product.expiredDate,
+        );
+      setGptMultiChecks(response);
+      setGptMultiModalVisible(true);
+    } catch (error) {
+      console.error('이미지 처리 중 오류 발생:', error);
+    } finally {
+      hideLoading(); // 로딩 종료
     }
   };
 
-  const postOneCheckItem = async (
-    inboundReceiptCode: string,
-    goodsCode: string,
-    selectedCheckItem: CheckItem,
-  ) => {
-    await updateOneCheckItem(inboundReceiptCode, goodsCode, {
-      ...selectedCheckItem,
-      check: true,
-    });
-    toast.show('수기 검수가 완료 되었습니다. 👏', {
-      type: 'info',
-      duration: 2000,
-    });
-
-    dispatch(fetchInboundReceipts());
-  };
-
-  const updateCheckItem = () => {
+  const updateCheckItem = async () => {
     if (selectedCheckItem) {
-      postOneCheckItem(inboundReceiptCode, product.goodsCode, {
+      await updateOneCheckItem(inboundReceiptCode, product.goodsCode, {
         ...selectedCheckItem,
         check: true,
       });
+      toast.show('수기 검수가 완료 되었습니다. 👏', {
+        type: 'info',
+        duration: 2000,
+      });
+
+      dispatch(fetchInboundReceipts());
     }
   };
 

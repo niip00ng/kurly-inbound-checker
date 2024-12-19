@@ -42,3 +42,28 @@ export function getProductCheckPrompt(
     `;
   }
 }
+
+export function getNormalParcelCheckPrompt(checkId: string) {
+  const resultFormat = `결과는 아래 형식 중 하나로 작성해 주세요.  
+    
+    정확할 경우:   {"result": "pass", "reason": ""}  
+    틀렸을 경우 (잘못된 항목과 이유를 포함):   {"result": "fail", "reason": ""}  
+    확인할 수 없는 오류가 발생한 경우:   {"result": "unknown", "reason": ""}`;
+
+  if (checkId === 'parcel_label_exist') {
+    return `다음 정보를 확인하세요. 
+    1. 입고라벨지에는 유통기한이라는 단어가 있어. 박스에 입고라벨지가 붙어 있는가?
+    ${resultFormat}
+    `;
+  } else if (checkId === '2') {
+    return `다음 정보를 확인하세요. 
+    1. 입고라벨지에 상품 종류는 최대 3개까지만 기재되어야 합니다.
+    ${resultFormat}
+    `;
+  } else if (checkId === 'invoice_dock_exist') {
+    return `다음 정보를 확인하세요. 
+    1. 송장에 붙어있는 단어 중에 도크라는 단어가 있는가?
+    ${resultFormat}
+    `;
+  }
+}

@@ -11,7 +11,7 @@ import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
 import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
-import InboundReceiptParcelTyoeCheckCard from './InboundReceiptParcelTyoeCheckCard';
+import InboundReceiptParcelTypeCheckCard from './InboundReceiptParcelTyoeCheckCard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LottieView from 'lottie-react-native';
 
@@ -157,7 +157,7 @@ const InboundReceiptDetail = () => {
                     / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
                   </Text>
                 </View>
-                <InboundReceiptParcelTyoeCheckCard
+                <InboundReceiptParcelTypeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
                   inboundType={inboundReceipt.inboundType}
                   checkList={inboundReceipt.inboundTypeCkeckList}
@@ -197,7 +197,7 @@ const InboundReceiptDetail = () => {
                     / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
                   </Text>
                 </View>
-                <InboundReceiptParcelTyoeCheckCard
+                <InboundReceiptParcelTypeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
                   inboundType={inboundReceipt.inboundType}
                   checkList={inboundReceipt.inboundTypeCkeckList}

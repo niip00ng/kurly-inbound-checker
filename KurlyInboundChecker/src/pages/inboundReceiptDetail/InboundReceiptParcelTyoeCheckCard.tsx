@@ -14,7 +14,12 @@ import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {CheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import CheckTypeSelectModal from './CheckTypeSelectModal';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {GptProductCheckResponse, GptResponse} from './api/chatGpt';
+import {
+  getAllPictureNormalTypeCheck,
+  getGptCheck,
+  GptProductCheckResponse,
+  GptResponse,
+} from './api/chatGpt';
 import {useLoading} from '@pages/common/LoadingContext';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
@@ -23,12 +28,12 @@ import GptResponseResultModal from './GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {updateOneParcelTypeCheckItem} from '../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
 import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
-if (
-  Platform.OS === 'android' &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+import {
+  createFormDataFromImages,
+  pickMultipleImages,
+  pickSingleImage,
+} from '../common/imagePickerUtil';
+import {getNormalParcelCheckPrompt} from './api/prompt';
 
 interface Props {
   inboundReceiptCode: string;
@@ -36,7 +41,7 @@ interface Props {
   checkList: Array<CheckItem>;
 }
 
-const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
+const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
   inboundReceiptCode,
   inboundType,
   checkList,
@@ -69,6 +74,79 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
     });
 
     dispatch(fetchInboundReceipts());
+  };
+
+  const handleGalleryMultiSelection = async () => {
+    try {
+      showLoading();
+      const selectedImages = await pickMultipleImages();
+
+      const formData = createFormDataFromImages(selectedImages, 'files');
+
+      const response: Array<GptProductCheckResponse> =
+        await getAllPictureNormalTypeCheck(formData);
+      setGptMultiChecks(response);
+    } catch (error) {
+      console.error('이미지 처리 중 오류 발생:', error);
+    } finally {
+      hideLoading(); // 로딩 종료
+    }
+  };
+
+  const handleGallerySelection = async () => {
+    try {
+      showLoading();
+      const selectedImageUri = await pickSingleImage();
+
+      const formData = createFormDataFromImages(
+        [
+          {
+            uri: selectedImageUri,
+            name: 'selectedImage.jpg',
+            type: 'image/jpeg',
+          },
+        ],
+        'file',
+      );
+
+      if (!selectedCheckItem) {
+        return;
+      }
+
+      const prompt = getNormalParcelCheckPrompt(selectedCheckItem?.id);
+
+      if (!prompt) {
+        return;
+      }
+
+      const response: GptResponse = await getGptCheck(formData, prompt);
+
+      if (response.result === 'pass') {
+        updateCheckItem();
+      }
+
+      setGptResponse(response);
+      setGptModalVisible(true);
+      console.log('API 응답:', response);
+    } catch (error) {
+    } finally {
+      hideLoading(); // 로딩 종료
+    }
+  };
+
+  const updateCheckItem = async () => {
+    if (selectedCheckItem) {
+      await updateOneParcelTypeCheckItem(inboundReceiptCode, inboundType, {
+        ...selectedCheckItem,
+        check: true,
+      });
+      toast.show('수기 검수가 완료 되었습니다. 👏', {
+        type: 'info',
+        duration: 2000,
+      });
+
+      dispatch(fetchInboundReceipts());
+    }
   };
 
   const handleCheckItemPress = (productCheckItem: CheckItem) => {
@@ -121,6 +199,7 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         clickGallary={() => {
+          handleGallerySelection();
           setModalVisible(false);
         }}
         clickManual={() => {
@@ -203,4 +282,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InboundReceiptParcelTyoeCheckCard;
+export default InboundReceiptParcelTypeCheckCard;

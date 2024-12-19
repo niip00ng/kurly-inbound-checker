@@ -17,7 +17,7 @@ export function getGptCheck(
 ): Promise<GptResponse> {
   return new Promise((resolve, reject) => {
     axiosInstance
-      .post('ai-checker', formData, {
+      .post('single-checker', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -34,7 +34,7 @@ export function getGptCheck(
   });
 }
 
-export function getAllPictureCheck(
+export function getAllPictureProductCheck(
   formData: FormData,
   barcodeNumber: string,
   expiredDate: string,
@@ -50,6 +50,44 @@ export function getAllPictureCheck(
           },
         },
       )
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((err: any) => {
+        reject(err);
+      });
+  });
+}
+
+export function getAllPictureNormalTypeCheck(
+  formData: FormData,
+): Promise<Array<GptProductCheckResponse>> {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .post(`normal-checker`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((err: any) => {
+        reject(err);
+      });
+  });
+}
+
+export function getAllPictureParcelTypeCheck(
+  formData: FormData,
+): Promise<Array<GptProductCheckResponse>> {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .post(`normal-checker`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then((response: any) => {
         resolve(response.data);
       })
