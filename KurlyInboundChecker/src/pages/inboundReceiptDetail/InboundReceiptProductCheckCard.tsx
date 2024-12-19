@@ -29,6 +29,7 @@ import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
 import GptResponseResultModal from './GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GptMultiResponseResultModal from './GptMultiResponseResultModal';
 if (
   Platform.OS === 'android' &&
@@ -247,9 +248,17 @@ const InboundReceiptProductCheckCard: React.FC<
             </View>
             <View style={styles.cardRow}>
               <Text style={styles.label}>체크리스트</Text>
-              <Text style={[styles.value, {color: checklistTextColor}]}>
-                {`${completedCount} / ${totalCount}개 체크완료`}
-              </Text>
+              <View style={{display: 'flex', flexDirection: 'row'}}>
+                <Text style={[styles.value, {color: checklistTextColor}]}>
+                  {`${completedCount} / ${totalCount}개 완료`}
+                </Text>
+                <FontAwesome
+                  name={spreadYn ? 'caret-up' : 'caret-down'}
+                  size={20}
+                  color={'#ffffff'}
+                  style={{marginLeft: 10}}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -342,7 +351,6 @@ const styles = StyleSheet.create({
   cardRow: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: 8,
   },
   label: {
@@ -358,6 +366,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontWeight: 'bold',
     flexWrap: 'wrap',
+    minWidth: '40%',
   },
   checklistCard: {
     backgroundColor: '#ffffff10',

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import TopComponent from '../TopComponent';
 import {
@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import InboundReceiptParcelTyoeCheckCard from './InboundReceiptParcelTyoeCheckCard';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LottieView from 'lottie-react-native';
 
 const InboundReceiptDetail = () => {
   const route = useRoute();
@@ -47,6 +48,30 @@ const InboundReceiptDetail = () => {
     );
   }
 
+  const checkCompletedProducts = () => {
+    return inboundReceipt.products.filter(product => {
+      if (product.checkList.filter(e => !e.check).length > 0) {
+        return false;
+      }
+      return true;
+    });
+  };
+
+  const completedParcelType = () => {
+    return (
+      inboundReceipt.inboundTypeCkeckList.filter(e => e.check).length ===
+      inboundReceipt.inboundTypeCkeckList.length
+    );
+  };
+
+  const totalCheckItemSize = () => {
+    return inboundReceipt.products.length + 1;
+  };
+
+  const checkCompletedSize = () => {
+    return checkCompletedProducts().length + (completedParcelType() ? 1 : 0);
+  };
+
   return (
     <>
       <TopComponent
@@ -68,11 +93,31 @@ const InboundReceiptDetail = () => {
               inboundType={inboundReceipt.inboundType}
               inboundStatus={inboundReceipt.inboundStatus}
             />
-
-            <Text style={s.subTitle}>
-              발주 상품 {inboundReceipt.products.length}개
-            </Text>
-
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 20,
+              }}>
+              <Text style={s.subTitle}>발주 상품 체크</Text>
+              <Text
+                style={[
+                  s.subTitle,
+                  {
+                    fontSize: 14,
+                    color:
+                      checkCompletedProducts().length ===
+                      inboundReceipt.products.length
+                        ? '#ffffff'
+                        : '#999999',
+                  },
+                ]}>
+                {checkCompletedProducts().length} /{' '}
+                {inboundReceipt.products.length}개 상품 완료
+              </Text>
+            </View>
             {inboundReceipt.products.map((item: ProductInfo, index: number) => (
               <InboundReceiptProductCheckCard
                 key={index}
@@ -81,15 +126,37 @@ const InboundReceiptDetail = () => {
               />
             ))}
             {inboundReceipt.inboundType === 'PARCEL' && (
-              <View>
-                <View style={s.titleRow}>
-                  <MaterialCommunityIcons
-                    name={'package-variant-closed'}
-                    size={20}
-                    color={'#ffffff'}
-                    style={{marginRight: 5, marginTop: 2}}
-                  />
-                  <Text style={s.subTitle}>택배입고 추가 체크</Text>
+              <View style={{marginTop: 20}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={s.titleRow}>
+                    <MaterialCommunityIcons
+                      name={'package-variant-closed'}
+                      size={20}
+                      color={'#ffffff'}
+                      style={{marginRight: 5, marginTop: 2}}
+                    />
+                    <Text style={s.subTitle}>택배입고 추가 체크</Text>
+                  </View>
+                  <Text
+                    style={[
+                      s.subTitle,
+                      {
+                        fontSize: 14,
+                        color: completedParcelType() ? '#ffffff' : '#999999',
+                      },
+                    ]}>
+                    {
+                      inboundReceipt.inboundTypeCkeckList.filter(e => e.check)
+                        .length
+                    }{' '}
+                    / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
+                  </Text>
                 </View>
                 <InboundReceiptParcelTyoeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
@@ -98,15 +165,37 @@ const InboundReceiptDetail = () => {
               </View>
             )}
             {inboundReceipt.inboundType === 'NORMAL' && (
-              <View>
-                <View style={s.titleRow}>
-                  <FontAwesome
-                    name={'truck'}
-                    size={20}
-                    color={'#ffffff'}
-                    style={{marginRight: 5, marginTop: 2}}
-                  />
-                  <Text style={s.subTitle}>일반입고 추가 체크</Text>
+              <View style={{marginTop: 20}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={s.titleRow}>
+                    <MaterialCommunityIcons
+                      name={'package-variant-closed'}
+                      size={20}
+                      color={'#ffffff'}
+                      style={{marginRight: 5, marginTop: 2}}
+                    />
+                    <Text style={s.subTitle}>일반입고 추가 체크</Text>
+                  </View>
+                  <Text
+                    style={[
+                      s.subTitle,
+                      {
+                        fontSize: 14,
+                        color: completedParcelType() ? '#ffffff' : '#999999',
+                      },
+                    ]}>
+                    {
+                      inboundReceipt.inboundTypeCkeckList.filter(e => e.check)
+                        .length
+                    }{' '}
+                    / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
+                  </Text>
                 </View>
                 <InboundReceiptParcelTyoeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
@@ -116,6 +205,46 @@ const InboundReceiptDetail = () => {
             )}
           </ScrollView>
         </LinearGradient>
+
+        {/* 하단 footer */}
+        <SafeAreaView
+          style={[
+            s.footer,
+            {
+              backgroundColor:
+                totalCheckItemSize() === checkCompletedSize()
+                  ? '#EEEEEE'
+                  : '#333333',
+            },
+          ]}>
+          <Text
+            style={[
+              s.footerText,
+              {
+                color:
+                  totalCheckItemSize() === checkCompletedSize()
+                    ? '#666666'
+                    : '#999999',
+              },
+            ]}>
+            {checkCompletedSize()} / {totalCheckItemSize()} 항목 체크 완료
+          </Text>
+          {totalCheckItemSize() === checkCompletedSize() && (
+            <LottieView
+              source={require('../../../assets/lottie/success_check.json')}
+              autoPlay
+              loop
+              style={[
+                {
+                  marginTop: 5,
+                  marginLeft: 5,
+                  width: 30,
+                  height: 30,
+                },
+              ]}
+            />
+          )}
+        </SafeAreaView>
       </View>
     </>
   );
@@ -129,6 +258,7 @@ const s = StyleSheet.create({
   },
   scrollWrapper: {
     padding: 15,
+    paddingBottom: 100,
   },
   title: {
     fontSize: 16,
@@ -147,5 +277,30 @@ const s = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#333333',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // iOS 그림자
+    shadowColor: '#000000', // 그림자 색
+    shadowOffset: {width: 0, height: -10}, // 그림자 방향 (위쪽으로 5px)
+    shadowOpacity: 0.7, // 그림자 투명도
+    shadowRadius: 5, // 그림자 블러 반경
+    // Android 그림자 (elevation은 그림자를 생성함)
+    elevation: 10, // 그림자의 높이
+  },
+
+  footerText: {
+    marginTop: 10,
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
