@@ -7,11 +7,11 @@ import {
   ProductInfo,
 } from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import LinearGradient from 'react-native-linear-gradient';
-import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
-import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
+import InboundReceiptBaseInfoCard from './component/InboundReceiptBaseInfoCard';
+import InboundReceiptProductCheckCard from './component/InboundReceiptProductCheckCard';
 import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
-import InboundReceiptParcelTypeCheckCard from './InboundReceiptParcelTyoeCheckCard';
+import InboundReceiptParcelTypeCheckCard from './component/InboundReceiptParcelTyoeCheckCard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LottieView from 'lottie-react-native';
 

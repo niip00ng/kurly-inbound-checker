@@ -1,39 +1,30 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Platform,
-  UIManager,
-  LayoutAnimation,
-} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {CheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
-import CheckTypeSelectModal from './CheckTypeSelectModal';
-import {launchImageLibrary} from 'react-native-image-picker';
+import CheckTypeSelectModal from '../CheckTypeSelectModal';
 import {
   getAllPictureNormalTypeCheck,
+  getAllPictureParcelTypeCheck,
   getGptCheck,
   GptProductCheckResponse,
   GptResponse,
-} from './api/chatGpt';
+} from '../api/chatGpt';
 import {useLoading} from '@pages/common/LoadingContext';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
-import GptResponseResultModal from './GptResponseResultModal';
+import GptResponseResultModal from '../GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {updateOneParcelTypeCheckItem} from '../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
-import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
+import {updateOneParcelTypeCheckItem} from '../../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
+import {fetchInboundReceipts} from '../../inboundReceiptListView/inboundReceiptsThunks';
 import {
   createFormDataFromImages,
   pickMultipleImages,
   pickSingleImage,
-} from '../common/imagePickerUtil';
-import {getNormalParcelCheckPrompt} from './api/prompt';
+} from '../../common/imagePickerUtil';
+import {getNormalTypeCheckPrompt} from '../api/prompt';
+import GptMultiResponseResultModal from '../GptMultiResponseResultModal';
 
 interface Props {
   inboundReceiptCode: string;
@@ -84,8 +75,13 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
       const formData = createFormDataFromImages(selectedImages, 'files');
 
       const response: Array<GptProductCheckResponse> =
-        await getAllPictureNormalTypeCheck(formData);
+        inboundType === 'NORMAL'
+          ? await getAllPictureNormalTypeCheck(formData)
+          : await getAllPictureParcelTypeCheck(formData);
+
+      console.log(inboundType + ' response:' + response);
       setGptMultiChecks(response);
+      setGptMultiModalVisible(true);
     } catch (error) {
     } finally {
       hideLoading(); // 로딩 종료
@@ -112,7 +108,7 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
         return;
       }
 
-      const prompt = getNormalParcelCheckPrompt(selectedCheckItem?.id);
+      const prompt = getNormalTypeCheckPrompt(selectedCheckItem?.id);
 
       if (!prompt) {
         return;
@@ -155,7 +151,10 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
 
   return (
     <View style={{marginBottom: 20}}>
-      <TouchableOpacity activeOpacity={0.7} style={styles.selectCheckType}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.selectCheckType}
+        onPress={handleGalleryMultiSelection}>
         <FontAwesome5
           name={'images'}
           size={16}
@@ -211,6 +210,14 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
         visible={gptModalVisible}
         onClose={() => setGptModalVisible(false)}
         gptResponse={gptResponse}
+      />
+
+      <GptMultiResponseResultModal
+        visible={gptMultiModalVisible}
+        onClose={() => setGptMultiModalVisible(false)}
+        onApply={() => {}}
+        checkList={checkList}
+        gptMultiChecks={gptMulitChecks}
       />
     </View>
   );

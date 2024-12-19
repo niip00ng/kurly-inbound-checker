@@ -43,7 +43,32 @@ export function getProductCheckPrompt(
   }
 }
 
-export function getNormalParcelCheckPrompt(checkId: string) {
+export function getNormalTypeCheckPrompt(checkId: string) {
+  const resultFormat = `결과는 아래 형식 중 하나로 작성해 주세요.  
+    
+    정확할 경우:   {"result": "pass", "reason": ""}  
+    틀렸을 경우 (잘못된 항목과 이유를 포함):   {"result": "fail", "reason": ""}  
+    확인할 수 없는 오류가 발생한 경우:   {"result": "unknown", "reason": ""}`;
+
+  if (checkId === 'pallet_type') {
+    return `다음 정보를 확인하세요. 
+    1. 파레트 색깔이 파란색, 빨간색, 연두색 이거나 또는 파렛트에 "AJ" , "KPP", "한국파렛트풀", "아주렌트" 라고 적혀있어야해.
+    ${resultFormat}
+    `;
+  } else if (checkId === 'pallet_arrangement') {
+    return `다음 정보를 확인하세요. 
+    1. 파레트 위에 있는 상품들이 가지런하게 정렬되어 있어야해.
+    ${resultFormat}
+    `;
+  } else if (checkId === '1') {
+    return `다음 정보를 확인하세요. 
+    1. 송장에 붙어있는 단어 중에 도크라는 단어가 있는가?
+    ${resultFormat}
+    `;
+  }
+}
+
+export function getParcelTypeCheckPrompt(checkId: string) {
   const resultFormat = `결과는 아래 형식 중 하나로 작성해 주세요.  
     
     정확할 경우:   {"result": "pass", "reason": ""}  

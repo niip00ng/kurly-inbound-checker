@@ -11,47 +11,39 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 const width = Dimensions.get('window').width;
 import {GptProductCheckResponse} from './api/chatGpt';
-import {
-  CheckItem,
-  ProductInfo,
-} from '../inboundReceiptListView/inboundReceiptsSlice';
+import {CheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {addCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '@modules/store';
-import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
 
 interface Props {
   visible: boolean;
   onClose: () => void;
-  inboundReceiptCode: string;
-  product: ProductInfo;
+  onApply: () => void;
+  checkList: Array<CheckItem>;
   gptMultiChecks: Array<GptProductCheckResponse>;
 }
 
 const GptMultiResponseResultModal: React.FC<Props> = ({
   visible,
   onClose,
-  inboundReceiptCode,
-  product,
+  onApply,
+  checkList,
   gptMultiChecks,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
   const [displayedItems, setDisplayedItems] = useState<boolean[]>([]);
 
   useEffect(() => {
     if (visible) {
       // `visible` 상태가 true로 변경될 때마다 항목 순차적으로 나타내기
-      const newDisplayedItems = product.checkList.map(() => false);
+      const newDisplayedItems = checkList.map(() => false);
       setDisplayedItems(newDisplayedItems);
     }
-  }, [visible, product]);
+  }, [visible, checkList]);
 
   useEffect(() => {
     if (visible) {
       // 항목을 순차적으로 보여주기 위해 `LayoutAnimation` 사용
-      product.checkList.forEach((_, index) => {
+      checkList.forEach((_, index) => {
         setTimeout(() => {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
           setDisplayedItems(prev => {
@@ -62,25 +54,8 @@ const GptMultiResponseResultModal: React.FC<Props> = ({
         }, index * 300); // 300ms 간격으로 항목을 표시
       });
     }
-  }, [visible, product.checkList]);
-  const updateCheckItem = async () => {
-    const result = product.checkList.map(productCheckItem => {
-      const find = gptMultiChecks.find(
-        e => e.checkType === productCheckItem.id && e.result === 'pass',
-      );
+  }, [visible, checkList]);
 
-      if (!find) return productCheckItem;
-      return {
-        ...productCheckItem,
-        check: true,
-      };
-    });
-
-    await addCheckItem(inboundReceiptCode, product.goodsCode, result);
-
-    dispatch(fetchInboundReceipts());
-    onClose();
-  };
   const defineCheckResult = (checkType: string) => {
     const find = gptMultiChecks.find(e => e.checkType === checkType);
     if (!find) {
@@ -138,7 +113,7 @@ const GptMultiResponseResultModal: React.FC<Props> = ({
           }}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>이미지 검수 결과</Text>
-            {product.checkList.map((checkItem: CheckItem, i: number) =>
+            {checkList.map((checkItem: CheckItem, i: number) =>
               displayedItems[i] ? (
                 <View key={i} style={styles.modalTextRow}>
                   {checkTypeResultLottie(defineCheckResult(checkItem.id))}
@@ -169,9 +144,7 @@ const GptMultiResponseResultModal: React.FC<Props> = ({
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.closeButton}
-                onPress={() => {
-                  updateCheckItem();
-                }}>
+                onPress={onApply}>
                 <Text style={[styles.closeButtonText, {color: '#ffffff'}]}>
                   성공한 검수 저장
                 </Text>

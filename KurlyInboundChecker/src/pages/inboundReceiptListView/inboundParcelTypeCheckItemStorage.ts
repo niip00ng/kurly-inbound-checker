@@ -10,12 +10,12 @@ const defaultNormalCheckItems = [
     check: false,
   },
   {
-    id: '2',
+    id: 'pallet_arrangement',
     title: '박스가 올바르게 정렬된 상태여야 합니다.',
     check: false,
   },
   {
-    id: '3',
+    id: 'pallet_type',
     title: '파레트는 빨강,파랑,녹색만 허용됩니다. (AJ / KPP)',
     check: false,
   },

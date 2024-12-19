@@ -12,29 +12,32 @@ import FastImage from 'react-native-fast-image';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ProductInfo} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {CheckItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
-import CheckTypeSelectModal from './CheckTypeSelectModal';
+import CheckTypeSelectModal from '../CheckTypeSelectModal';
 import {
   getAllPictureProductCheck,
   getGptCheck,
   GptProductCheckResponse,
   GptResponse,
-} from './api/chatGpt';
-import {getProductCheckPrompt} from './api/prompt';
+} from '../api/chatGpt';
+import {getProductCheckPrompt} from '../api/prompt';
 import {useLoading} from '@pages/common/LoadingContext';
-import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
-import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
+import {
+  addCheckItem,
+  updateOneCheckItem,
+} from '../../inboundReceiptListView/inboundProductCheckItemStorage';
+import {fetchInboundReceipts} from '../../inboundReceiptListView/inboundReceiptsThunks';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
-import GptResponseResultModal from './GptResponseResultModal';
+import GptResponseResultModal from '../GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import GptMultiResponseResultModal from './GptMultiResponseResultModal';
+import GptMultiResponseResultModal from '../GptMultiResponseResultModal';
 import {
   createFormDataFromImages,
   pickMultipleImages,
   pickSingleImage,
-} from '../common/imagePickerUtil';
+} from '../../common/imagePickerUtil';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -137,7 +140,6 @@ const InboundReceiptProductCheckCard: React.FC<
 
       const formData = createFormDataFromImages(selectedImages, 'files');
 
-      console.log(product.barcode, product.expiredDate, formData);
       const response: Array<GptProductCheckResponse> =
         await getAllPictureProductCheck(
           formData,
@@ -165,6 +167,27 @@ const InboundReceiptProductCheckCard: React.FC<
 
       dispatch(fetchInboundReceipts());
     }
+  };
+
+  const updateAllStorageCheckItems = async () => {
+    const result = product.checkList.map(productCheckItem => {
+      const find = gptMulitChecks.find(
+        e => e.checkType === productCheckItem.id && e.result === 'pass',
+      );
+      if (!find) {
+        return productCheckItem;
+      }
+
+      return {
+        ...productCheckItem,
+        check: true,
+      };
+    });
+
+    await addCheckItem(inboundReceiptCode, product.goodsCode, result);
+
+    dispatch(fetchInboundReceipts());
+    setGptMultiModalVisible(false);
   };
 
   return (
@@ -296,8 +319,8 @@ const InboundReceiptProductCheckCard: React.FC<
       <GptMultiResponseResultModal
         visible={gptMultiModalVisible}
         onClose={() => setGptMultiModalVisible(false)}
-        inboundReceiptCode={inboundReceiptCode}
-        product={product}
+        onApply={() => updateAllStorageCheckItems()}
+        checkList={product.checkList}
         gptMultiChecks={gptMulitChecks}
       />
     </View>

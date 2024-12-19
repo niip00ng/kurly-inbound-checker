@@ -83,7 +83,7 @@ export function getAllPictureParcelTypeCheck(
 ): Promise<Array<GptProductCheckResponse>> {
   return new Promise((resolve, reject) => {
     axiosInstance
-      .post(`normal-checker`, formData, {
+      .post(`parcel-checker`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
