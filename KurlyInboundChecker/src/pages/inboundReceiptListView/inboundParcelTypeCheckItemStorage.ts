@@ -16,7 +16,7 @@ const defaultNormalCheckItems = [
   },
   {
     id: '3',
-    title: '파레트는 빨강,파랑,녹색만 허용됩니다. (AJU/KPP)',
+    title: '파레트는 빨강,파랑,녹색만 허용됩니다. (AJ / KPP)',
     check: false,
   },
 ];

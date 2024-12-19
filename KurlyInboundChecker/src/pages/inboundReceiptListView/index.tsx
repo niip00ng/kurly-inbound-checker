@@ -43,127 +43,139 @@ const Home = () => {
     navigation.navigate('InboundReceiptDetail', {code: inboundReceipt.code});
   };
 
-  const renderInboundReciptCard = ({item}: {item: InboundReceiptItem}) => (
-    <TouchableOpacity
-      style={[
-        s.card,
-        {
-          backgroundColor:
-            item.inboundStatus === 'READY' ? '#FFFFFF50' : '#FFFFFF10',
-        },
-      ]}
-      activeOpacity={0.7}
-      onPress={() => handleCardPress(item)}>
-      <View style={[s.cardRow, {justifyContent: 'space-between'}]}>
-        <View style={[s.cardLabel, {marginBottom: 10}]}>
-          <Ionicons
-            name={'barcode'}
-            size={20}
-            color={'#222222'}
-            style={{marginRight: 5}}
-          />
-          <Text style={s.code}>{item.code}</Text>
-        </View>
-        <Text
-          style={
-            item.inboundStatus === 'READY' ? s.statusReady : s.statusComplete
-          }>
-          {item.inboundStatus === 'READY' ? '준비 중' : '완료'}
-        </Text>
-      </View>
+  const renderInboundReciptCard = ({item}: {item: InboundReceiptItem}) => {
+    const checkProductYn = () => {
+      return (
+        item.products.filter(product => {
+          if (product.checkList.filter(e => !e.check).length > 0) {
+            return false;
+          }
 
-      <View style={s.cardRow}>
-        <View style={s.cardLabel}>
-          <MaterialCommunityIcons
-            name={'calendar-arrow-left'}
-            size={18}
-            color={'#222222'}
-            style={{marginRight: 5}}
-          />
-          <Text style={s.infoLabel}>입고 예정일</Text>
-        </View>
+          return true;
+        }).length === item.products.length
+      );
+    };
 
-        <Text style={s.info}>{item.inboundDate}</Text>
-      </View>
-      <View style={s.cardRow}>
-        <View style={s.cardLabel}>
-          <MaterialCommunityIcons
-            name={'calendar-arrow-right'}
-            size={18}
-            color={'#222222'}
-            style={{marginRight: 5}}
-          />
-          <Text style={s.infoLabel}>발주 날짜</Text>
+    const checkParcelTypeYn = () => {
+      return (
+        item.inboundTypeCkeckList.filter(e => e.check).length ===
+        item.inboundTypeCkeckList.length
+      );
+    };
+
+    const allChecked = () => {
+      return checkParcelTypeYn() && checkProductYn();
+    };
+
+    return (
+      <TouchableOpacity
+        style={[
+          s.card,
+          {
+            backgroundColor: allChecked() ? '#FFFFFF50' : '#DDDDDD',
+          },
+        ]}
+        activeOpacity={0.7}
+        onPress={() => handleCardPress(item)}>
+        <View style={[s.cardRow, {justifyContent: 'space-between'}]}>
+          <View style={[s.cardLabel, {marginBottom: 10}]}>
+            <Ionicons
+              name={'barcode'}
+              size={20}
+              color={'#222222'}
+              style={{marginRight: 5}}
+            />
+            <Text style={s.code}>{item.code}</Text>
+          </View>
+          <Text style={allChecked() ? s.statusComplete : s.statusReady}>
+            {allChecked() ? '완료' : '확인중'}
+          </Text>
         </View>
 
-        <Text style={s.info}>{item.inboundOrderDate}</Text>
-      </View>
-      <View style={s.cardRow}>
-        <View style={s.cardLabel}>
-          <MaterialIcons
-            name={'factory'}
-            size={16}
-            color={'#222222'}
-            style={{marginRight: 5, marginLeft: 1}}
-          />
-          <Text style={s.infoLabel}>입고지</Text>
-        </View>
-        <Text style={s.info}>{item.inboundSimplePlace}</Text>
-      </View>
-      <View style={s.cardRow}>
-        <View style={s.cardLabel}>
-          <MaterialIcons
-            name={'category'}
-            size={16}
-            color={'#222222'}
-            style={{marginRight: 5, marginLeft: 1}}
-          />
-          <Text style={s.infoLabel}>유형</Text>
-        </View>
+        <View style={s.cardRow}>
+          <View style={s.cardLabel}>
+            <MaterialCommunityIcons
+              name={'calendar-arrow-left'}
+              size={18}
+              color={'#222222'}
+              style={{marginRight: 5}}
+            />
+            <Text style={s.infoLabel}>입고 예정일</Text>
+          </View>
 
-        <Text style={s.info}>
-          {item.inboundType === 'NORMAL'
-            ? '일반입고(입고시간없음)'
-            : '택배입고'}
-        </Text>
-      </View>
-      <View style={[s.cardRow, {alignItems: 'flex-start'}]}>
-        <View style={[s.cardLabel, {marginTop: 0}]}>
-          <MaterialCommunityIcons
-            name={'package'}
-            size={16}
-            color={'#222222'}
-            style={{marginRight: 5, marginLeft: 1}}
-          />
-          <Text style={s.infoLabel}>입고상품</Text>
+          <Text style={s.info}>{item.inboundDate}</Text>
         </View>
+        <View style={s.cardRow}>
+          <View style={s.cardLabel}>
+            <MaterialCommunityIcons
+              name={'calendar-arrow-right'}
+              size={18}
+              color={'#222222'}
+              style={{marginRight: 5}}
+            />
+            <Text style={s.infoLabel}>발주 날짜</Text>
+          </View>
 
-        <View>
-          {item.products.map((product, index) => {
-            const getChecklistStatus = () => {
+          <Text style={s.info}>{item.inboundOrderDate}</Text>
+        </View>
+        <View style={s.cardRow}>
+          <View style={s.cardLabel}>
+            <MaterialIcons
+              name={'factory'}
+              size={16}
+              color={'#222222'}
+              style={{marginRight: 5, marginLeft: 1}}
+            />
+            <Text style={s.infoLabel}>입고지</Text>
+          </View>
+          <Text style={s.info}>{item.inboundSimplePlace}</Text>
+        </View>
+        <View style={s.cardRow}>
+          <View style={s.cardLabel}>
+            <MaterialIcons
+              name={'category'}
+              size={16}
+              color={'#222222'}
+              style={{marginRight: 5, marginLeft: 1}}
+            />
+            <Text style={s.infoLabel}>유형</Text>
+          </View>
+
+          <Text style={s.info}>
+            {item.inboundType === 'NORMAL'
+              ? '일반입고(입고시간없음)'
+              : '택배입고'}
+          </Text>
+        </View>
+        <View style={[s.cardRow, {alignItems: 'flex-start'}]}>
+          <View style={[s.cardLabel, {marginTop: 0}]}>
+            <MaterialCommunityIcons
+              name={'package'}
+              size={16}
+              color={'#222222'}
+              style={{marginRight: 5, marginLeft: 1}}
+            />
+            <Text style={s.infoLabel}>입고상품</Text>
+          </View>
+
+          <View>
+            {item.products.map((product, index) => {
               return (
-                product.checkList.length ===
-                product.checkList.filter(e => e.check).length
-              );
-            };
-
-            return (
-              <View
-                key={index}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 4,
-                }}>
-                <Text
+                <View
+                  key={index}
                   style={{
-                    color: '#000000',
-                    fontWeight: getChecklistStatus() ? 'bold' : '300',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 4,
                   }}>
-                  {product.goodsName} {getChecklistStatus()}
-                </Text>
-                {/* <FastImage
+                  <Text
+                    style={{
+                      color: '#222222',
+                    }}>
+                    {product.goodsName}
+                  </Text>
+                  {/* <FastImage
                       style={{
                         marginLeft: 10,
                         width: 30,
@@ -172,13 +184,14 @@ const Home = () => {
                       }}
                       source={{uri: product.imageUrl}}
                     /> */}
-              </View>
-            );
-          })}
+                </View>
+              );
+            })}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={s.container}>
@@ -187,6 +200,7 @@ const Home = () => {
           data={inboundReceipts}
           renderItem={renderInboundReciptCard}
           keyExtractor={item => item.code}
+          style={{height: '100%'}}
           contentContainerStyle={s.listContainer}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -206,7 +220,6 @@ const s = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
-    height: '100%',
   },
   card: {
     padding: 16,
@@ -251,6 +264,6 @@ const s = StyleSheet.create({
   statusComplete: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#BABABA80',
+    color: '#222222',
   },
 });

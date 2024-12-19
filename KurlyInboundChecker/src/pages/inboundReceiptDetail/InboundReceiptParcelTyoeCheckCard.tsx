@@ -73,14 +73,14 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
             <MaterialIcons
               name={'check-circle-outline'}
               size={16}
-              color={checkItem.check ? '#ffffff' : '#999999'}
+              color={checkItem.check ? '#999999' : '#ffffff'}
               style={{marginRight: 5, marginLeft: 1}}
             />
             <Text
               style={[
                 styles.checkItemText,
                 {
-                  color: checkItem.check ? '#ffffff' : '#999999',
+                  color: checkItem.check ? '#999999' : '#ffffff',
                   textDecorationLine: !checkItem.check
                     ? 'none'
                     : 'line-through', // checkItem.check가 false일 때 취소선 추가

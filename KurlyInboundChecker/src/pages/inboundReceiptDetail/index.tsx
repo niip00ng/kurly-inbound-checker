@@ -12,7 +12,6 @@ import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
 import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
 import InboundReceiptParcelTyoeCheckCard from './InboundReceiptParcelTyoeCheckCard';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LottieView from 'lottie-react-native';
 
