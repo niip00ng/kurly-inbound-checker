@@ -20,6 +20,7 @@ export interface InboundReceiptItem {
   inboundSimplePlace: string;
   inboundPlace: string;
   inboundType: string;
+  inboundTypeCkeckList: Array<CheckItem>;
   inboundStatus: string;
   products: Array<ProductInfo>;
 }

@@ -2,6 +2,7 @@ import {Dispatch} from 'redux';
 import {InboundReceiptItem} from './inboundReceiptsSlice';
 import {setInboundReceipts, setLoadingSlice} from './inboundReceiptsSlice';
 import {getAllCheckItems} from './inboundProductCheckItemStorage';
+import {getAllParcelTypeCheckItems} from './inboundParcelTypeCheckItemStorage';
 
 export const fetchInboundReceipts = () => {
   return async (dispatch: Dispatch): Promise<void> => {
@@ -18,6 +19,7 @@ export const fetchInboundReceipts = () => {
           inboundPlace:
             '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
           inboundType: 'NORMAL',
+          inboundTypeCkeckList: [],
           inboundStatus: 'READY',
           products: [
             {
@@ -56,6 +58,7 @@ export const fetchInboundReceipts = () => {
           inboundPlace:
             '경기도 김포시 아라육로 75 켄달스퀘어 김포LP 2층 B202~206',
           inboundType: 'PARCEL',
+          inboundTypeCkeckList: [],
           inboundStatus: 'END',
           products: [
             {
@@ -78,6 +81,10 @@ export const fetchInboundReceipts = () => {
       const updatedResponse = await Promise.all(
         response.map(async receipt => ({
           ...receipt,
+          inboundTypeCkeckList: await getAllParcelTypeCheckItems(
+            receipt.code,
+            receipt.inboundType,
+          ),
           products: await Promise.all(
             receipt.products.map(async product => ({
               ...product,

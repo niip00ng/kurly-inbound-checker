@@ -11,6 +11,9 @@ import InboundReceiptBaseInfoCard from './InboundReceiptBaseInfoCard';
 import InboundReceiptProductCheckCard from './InboundReceiptProductCheckCard';
 import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
+import InboundReceiptParcelTyoeCheckCard from './InboundReceiptParcelTyoeCheckCard';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const InboundReceiptDetail = () => {
   const route = useRoute();
@@ -65,25 +68,52 @@ const InboundReceiptDetail = () => {
               inboundType={inboundReceipt.inboundType}
               inboundStatus={inboundReceipt.inboundStatus}
             />
-            {inboundReceipt.inboundType === 'PARCEL' && (
-              <Text style={s.subTitle}>택배입고</Text>
-            )}
-            {inboundReceipt.inboundType === 'NORMAL' && (
-              <Text style={s.subTitle}>일반입고</Text>
-            )}
 
             <Text style={s.subTitle}>
               발주 상품 {inboundReceipt.products.length}개
             </Text>
 
             {inboundReceipt.products.map((item: ProductInfo, index: number) => (
-              <View key={index}>
-                <InboundReceiptProductCheckCard
+              <InboundReceiptProductCheckCard
+                key={index}
+                inboundReceiptCode={inboundReceipt.code}
+                product={item}
+              />
+            ))}
+            {inboundReceipt.inboundType === 'PARCEL' && (
+              <View>
+                <View style={s.titleRow}>
+                  <MaterialCommunityIcons
+                    name={'package-variant-closed'}
+                    size={20}
+                    color={'#ffffff'}
+                    style={{marginRight: 5, marginTop: 2}}
+                  />
+                  <Text style={s.subTitle}>택배입고 추가 체크</Text>
+                </View>
+                <InboundReceiptParcelTyoeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
-                  product={item}
+                  checkList={inboundReceipt.inboundTypeCkeckList}
                 />
               </View>
-            ))}
+            )}
+            {inboundReceipt.inboundType === 'NORMAL' && (
+              <View>
+                <View style={s.titleRow}>
+                  <FontAwesome
+                    name={'truck'}
+                    size={20}
+                    color={'#ffffff'}
+                    style={{marginRight: 5, marginTop: 2}}
+                  />
+                  <Text style={s.subTitle}>일반입고 추가 체크</Text>
+                </View>
+                <InboundReceiptParcelTyoeCheckCard
+                  inboundReceiptCode={inboundReceipt.code}
+                  checkList={inboundReceipt.inboundTypeCkeckList}
+                />
+              </View>
+            )}
           </ScrollView>
         </LinearGradient>
       </View>
@@ -112,5 +142,10 @@ const s = StyleSheet.create({
     color: '#ffffff',
     marginTop: 10,
     marginBottom: 8,
+  },
+  titleRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
