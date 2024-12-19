@@ -186,6 +186,11 @@ const InboundReceiptProductCheckCard: React.FC<
 
     await addCheckItem(inboundReceiptCode, product.goodsCode, result);
 
+    toast.show('이미지 체크 검수가 완료 되었습니다. 👏', {
+      type: 'info',
+      duration: 2000,
+    });
+
     dispatch(fetchInboundReceipts());
     setGptMultiModalVisible(false);
   };

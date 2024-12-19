@@ -16,7 +16,10 @@ import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
 import GptResponseResultModal from '../GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {updateOneParcelTypeCheckItem} from '../../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
+import {
+  addParcelTypeCheckItem,
+  updateOneParcelTypeCheckItem,
+} from '../../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
 import {fetchInboundReceipts} from '../../inboundReceiptListView/inboundReceiptsThunks';
 import {
   createFormDataFromImages,
@@ -51,20 +54,19 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
     null,
   );
 
-  const postOneCheckItem = async () => {
-    if (!selectedCheckItem) {
-      return;
-    }
-    await updateOneParcelTypeCheckItem(inboundReceiptCode, inboundType, {
-      ...selectedCheckItem,
-      check: true,
-    });
-    toast.show('수기 검수가 완료 되었습니다. 👏', {
-      type: 'info',
-      duration: 2000,
-    });
+  const updateCheckItem = async () => {
+    if (selectedCheckItem) {
+      await updateOneParcelTypeCheckItem(inboundReceiptCode, inboundType, {
+        ...selectedCheckItem,
+        check: true,
+      });
+      toast.show('수기 검수가 완료 되었습니다. 👏', {
+        type: 'info',
+        duration: 2000,
+      });
 
-    dispatch(fetchInboundReceipts());
+      dispatch(fetchInboundReceipts());
+    }
   };
 
   const handleGalleryMultiSelection = async () => {
@@ -129,19 +131,30 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
     }
   };
 
-  const updateCheckItem = async () => {
-    if (selectedCheckItem) {
-      await updateOneParcelTypeCheckItem(inboundReceiptCode, inboundType, {
-        ...selectedCheckItem,
-        check: true,
-      });
-      toast.show('수기 검수가 완료 되었습니다. 👏', {
-        type: 'info',
-        duration: 2000,
-      });
+  const updateAllStorageCheckItems = async () => {
+    const result = checkList.map(productCheckItem => {
+      const find = gptMulitChecks.find(
+        e => e.checkType === productCheckItem.id && e.result === 'pass',
+      );
+      if (!find) {
+        return productCheckItem;
+      }
 
-      dispatch(fetchInboundReceipts());
-    }
+      return {
+        ...productCheckItem,
+        check: true,
+      };
+    });
+
+    await addParcelTypeCheckItem(inboundReceiptCode, result);
+
+    toast.show('이미지 체크 검수가 완료 되었습니다. 👏', {
+      type: 'info',
+      duration: 2000,
+    });
+
+    dispatch(fetchInboundReceipts());
+    setGptMultiModalVisible(false);
   };
 
   const handleCheckItemPress = (productCheckItem: CheckItem) => {
@@ -202,7 +215,7 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
         }}
         clickManual={() => {
           setModalVisible(false);
-          postOneCheckItem();
+          updateCheckItem();
         }}
         selectedCheckItem={selectedCheckItem}
       />
@@ -215,7 +228,7 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
       <GptMultiResponseResultModal
         visible={gptMultiModalVisible}
         onClose={() => setGptMultiModalVisible(false)}
-        onApply={() => {}}
+        onApply={updateAllStorageCheckItems}
         checkList={checkList}
         gptMultiChecks={gptMulitChecks}
       />
