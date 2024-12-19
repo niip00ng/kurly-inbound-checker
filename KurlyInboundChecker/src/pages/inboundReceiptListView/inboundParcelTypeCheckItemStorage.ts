@@ -25,17 +25,17 @@ const defaultParcelCheckItems = [
   {
     id: '1',
     title: '입고라벨지가 박스에 부착되어 있어야 합니다.',
-    check: true,
+    check: false,
   },
   {
     id: '2',
     title: '입고라벨지에 상품 종류는 최대 3개까지만 기재되어야 합니다.',
-    check: true,
+    check: false,
   },
   {
     id: '3',
     title: '발주서의 입고 주소와 송장 주소가 일치해야합니다. (도크 번호 필수)',
-    check: true,
+    check: false,
   },
 ];
 

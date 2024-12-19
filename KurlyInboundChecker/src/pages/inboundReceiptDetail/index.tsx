@@ -159,6 +159,7 @@ const InboundReceiptDetail = () => {
                 </View>
                 <InboundReceiptParcelTyoeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
+                  inboundType={inboundReceipt.inboundType}
                   checkList={inboundReceipt.inboundTypeCkeckList}
                 />
               </View>
@@ -198,6 +199,7 @@ const InboundReceiptDetail = () => {
                 </View>
                 <InboundReceiptParcelTyoeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
+                  inboundType={inboundReceipt.inboundType}
                   checkList={inboundReceipt.inboundTypeCkeckList}
                 />
               </View>

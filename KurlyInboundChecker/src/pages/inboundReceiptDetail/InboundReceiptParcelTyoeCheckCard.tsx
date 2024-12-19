@@ -21,6 +21,8 @@ import {AppDispatch} from '@modules/store';
 import {useToast} from 'react-native-toast-notifications';
 import GptResponseResultModal from './GptResponseResultModal';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {updateOneParcelTypeCheckItem} from '../inboundReceiptListView/inboundParcelTypeCheckItemStorage';
+import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -30,11 +32,13 @@ if (
 
 interface Props {
   inboundReceiptCode: string;
+  inboundType: string;
   checkList: Array<CheckItem>;
 }
 
 const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
   inboundReceiptCode,
+  inboundType,
   checkList,
 }) => {
   const toast = useToast();
@@ -50,6 +54,27 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
   const [selectedCheckItem, setSelectedCheckItem] = useState<CheckItem | null>(
     null,
   );
+
+  const postOneCheckItem = async () => {
+    if (!selectedCheckItem) {
+      return;
+    }
+    await updateOneParcelTypeCheckItem(inboundReceiptCode, inboundType, {
+      ...selectedCheckItem,
+      check: true,
+    });
+    toast.show('수기 검수가 완료 되었습니다. 👏', {
+      type: 'info',
+      duration: 2000,
+    });
+
+    dispatch(fetchInboundReceipts());
+  };
+
+  const handleCheckItemPress = (productCheckItem: CheckItem) => {
+    setSelectedCheckItem(productCheckItem);
+    setModalVisible(true);
+  };
 
   return (
     <View style={{marginBottom: 20}}>
@@ -69,7 +94,8 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
           <TouchableOpacity
             activeOpacity={0.7}
             key={i}
-            style={styles.checklistRow}>
+            style={styles.checklistRow}
+            onPress={() => handleCheckItemPress(checkItem)}>
             <MaterialIcons
               name={'check-circle-outline'}
               size={16}
@@ -99,6 +125,7 @@ const InboundReceiptParcelTyoeCheckCard: React.FC<Props> = ({
         }}
         clickManual={() => {
           setModalVisible(false);
+          postOneCheckItem();
         }}
         selectedCheckItem={selectedCheckItem}
       />
