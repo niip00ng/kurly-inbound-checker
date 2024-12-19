@@ -10,6 +10,7 @@ import {Provider} from 'react-redux';
 import {ToastProvider} from 'react-native-toast-notifications';
 import GlobalLoading from '@pages/common/GlobalLoading';
 import {LoadingProvider} from './src/pages/common/LoadingContext';
+import Notification from '@pages/notification';
 
 function App(): React.JSX.Element {
   const RootStack = createNativeStackNavigator();
@@ -38,6 +39,11 @@ function App(): React.JSX.Element {
                 <RootStack.Screen
                   name="InboundReceiptDetail"
                   component={InboundReceiptDetail}
+                />
+                <RootStack.Screen
+                  name="Notification"
+                  component={Notification}
+                  options={{presentation: 'containedTransparentModal'}}
                 />
               </RootStack.Group>
             </RootStack.Navigator>

@@ -12,49 +12,56 @@ import DeviceInfo from 'react-native-device-info';
 import TabIcon from './TabIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const CustomHeader = ({title}: {title: string}) => (
-  <LinearGradient colors={['#65039E', '#9032C7']} style={s.header}>
-    <View
-      style={{
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        zIndex: 3,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS === 'ios' ? 60 : 10,
-        paddingBottom: 10,
-      }}>
-      <Text style={s.headerTitle}>{title}</Text>
-      <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
-        <View style={{position: 'relative'}}>
-          <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
-
-          {/* 빨간 점 표시 */}
-          <View
-            style={{
-              position: 'absolute',
-              top: -5,
-              right: -5,
-              width: 10,
-              height: 10,
-              borderRadius: 5,
-              backgroundColor: 'red',
-            }}
-          />
-        </View>
-      </TouchableOpacity>
-    </View>
-  </LinearGradient>
-);
-
 const Main = (props: any) => {
+  const navigation: any = useNavigation();
+
+  const CustomHeader = ({title}: {title: string}) => (
+    <LinearGradient colors={['#65039E', '#9032C7']} style={s.header}>
+      <View
+        style={{
+          borderBottomLeftRadius: 10,
+          borderBottomRightRadius: 10,
+          zIndex: 3,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          paddingTop: Platform.OS === 'ios' ? 60 : 10,
+          paddingBottom: 10,
+        }}>
+        <Text style={s.headerTitle}>{title}</Text>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            navigation.navigate('Notification');
+          }}>
+          <View style={{position: 'relative'}}>
+            <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
+
+            {/* 빨간 점 표시 */}
+            <View
+              style={{
+                position: 'absolute',
+                top: -5,
+                right: -5,
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                backgroundColor: 'red',
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
+  );
+
   function TabOption({state, navigation}: any) {
     return (
       <GestureHandlerRootView style={s.wrapper}>
@@ -79,6 +86,18 @@ const Main = (props: any) => {
                   icon={
                     <Ionicons
                       name={active() ? 'grid' : 'grid-outline'}
+                      size={25}
+                      color="#ffffff"
+                    />
+                  }
+                />
+              );
+            } else if (name === 'Barcode') {
+              return (
+                <TabIcon
+                  icon={
+                    <Ionicons
+                      name={active() ? 'barcode' : 'barcode-outline'}
                       size={25}
                       color="#ffffff"
                     />
@@ -117,6 +136,13 @@ const Main = (props: any) => {
           name="inboundReceiptListView"
           options={{
             header: () => <CustomHeader title="입고 발주서 목록" />, // 커스텀 헤더
+          }}
+        />
+        <Tab.Screen
+          component={Settings}
+          name="Barcode"
+          options={{
+            header: () => <CustomHeader title="더보기" />, // 커스텀 헤더
           }}
         />
         <Tab.Screen
