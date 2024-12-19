@@ -33,7 +33,22 @@ const CustomHeader = ({title}: {title: string}) => (
       }}>
       <Text style={s.headerTitle}>{title}</Text>
       <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
-        <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
+        <View style={{position: 'relative'}}>
+          <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
+
+          {/* 빨간 점 표시 */}
+          <View
+            style={{
+              position: 'absolute',
+              top: -5,
+              right: -5,
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: 'red',
+            }}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   </LinearGradient>

@@ -49,7 +49,7 @@ const Home = () => {
         s.card,
         {
           backgroundColor:
-            item.inboundStatus === 'READY' ? '#00000080' : '#00000020',
+            item.inboundStatus === 'READY' ? '#FFFFFF50' : '#FFFFFF10',
         },
       ]}
       activeOpacity={0.7}
@@ -59,7 +59,7 @@ const Home = () => {
           <Ionicons
             name={'barcode'}
             size={20}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5}}
           />
           <Text style={s.code}>{item.code}</Text>
@@ -77,7 +77,7 @@ const Home = () => {
           <MaterialCommunityIcons
             name={'calendar-arrow-left'}
             size={18}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5}}
           />
           <Text style={s.infoLabel}>입고 예정일</Text>
@@ -90,7 +90,7 @@ const Home = () => {
           <MaterialCommunityIcons
             name={'calendar-arrow-right'}
             size={18}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5}}
           />
           <Text style={s.infoLabel}>발주 날짜</Text>
@@ -103,7 +103,7 @@ const Home = () => {
           <MaterialIcons
             name={'factory'}
             size={16}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5, marginLeft: 1}}
           />
           <Text style={s.infoLabel}>입고지</Text>
@@ -115,7 +115,7 @@ const Home = () => {
           <MaterialIcons
             name={'category'}
             size={16}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5, marginLeft: 1}}
           />
           <Text style={s.infoLabel}>유형</Text>
@@ -132,7 +132,7 @@ const Home = () => {
           <MaterialCommunityIcons
             name={'package'}
             size={16}
-            color={'#ffffff'}
+            color={'#222222'}
             style={{marginRight: 5, marginLeft: 1}}
           />
           <Text style={s.infoLabel}>입고상품</Text>
@@ -158,7 +158,7 @@ const Home = () => {
                 }}>
                 <Text
                   style={{
-                    color: '#ffffff',
+                    color: '#000000',
                     fontWeight: getChecklistStatus() ? 'bold' : '300',
                   }}>
                   {product.goodsName} {getChecklistStatus()}
@@ -217,20 +217,20 @@ const s = StyleSheet.create({
   code: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#222222',
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
     fontWeight: '300',
-    color: '#ffffff',
+    color: '#222222',
     marginBottom: 4,
     minWidth: 100,
   },
   infoLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#ffffff',
+    color: '#222222',
     marginBottom: 4,
     minWidth: 100,
   },
@@ -246,11 +246,11 @@ const s = StyleSheet.create({
   statusReady: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#222222',
   },
   statusComplete: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#ffffff80',
+    color: '#BABABA80',
   },
 });
