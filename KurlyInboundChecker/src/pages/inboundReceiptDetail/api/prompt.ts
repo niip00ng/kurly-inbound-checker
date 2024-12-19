@@ -1,36 +1,44 @@
-export function getPrompt(checkId: string) {
-  if (checkId === '') {
-    //발주서와 상품의 종류 및 수량이 일치하는가?
-    return `다음 정보를 확인하세요. 이 정보는 박스에 있는 **한국어 라벨**에 적힌 내용입니다.  
-    1. **상품명**이 강냉이 가 맞는지 확인합니다.   
-    2. **중량**이 250g 맞는지 확인합니다.   
-    3. **수량**이 15ea 맞는지 확인합니다.   
-    결과는 아래 형식 중 하나로 작성해 주세요.  
+export function getProductCheckPrompt(
+  checkId: string,
+  gooodsBarcode: string,
+  expireDate: string,
+) {
+  const resultFormat = `결과는 아래 형식 중 하나로 작성해 주세요.  
     
-    모든 항목이 정확할 경우:   {"result": "SUCCESS", "reason": ""}  
-    어떤 항목이라도 틀렸을 경우 (잘못된 항목과 이유를 포함):   {"result": "FAIL", "reason": ""}  
-    확인할 수 없는 오류가 발생한 경우:   {"result": "UNKNOWN", "reason": ""}`;
-  } else if (checkId === '2') {
-    //발주서의 소비기한이 실상품의 소비기한과 일치하거나 더 미래인가?
-    return '1';
-  } else if (checkId === '3') {
-    //외박스의 소비기한과 실상품의 소비기한이 일치하는가?
-    return '1';
-  } else if (checkId === '4') {
-    //상품에 바코드가 정상 부착되어 있는가?
-    return '1';
-  } else if (checkId === '5') {
-    //상품의 모든 바코드가 동일한가?
-    return `다음 정보를 확인하세요. 이 정보는 박스에 있는 바코드를 전부 찾아줘.
-    그리고 응답은 반드시 아래 룰을 지켜줘, reason은 무조건 한국어로 해줘 
-    - 모든 바코드가 일치 한 경우:   {"result": "SUCCESS", "reason": ""}  
-    - 어떤 하나의 바코드라도 다른 경우 (이유는 reason에 추가):   {"result": "FAIL", "reason": ""}  
-    - 알수 없는 경우 (이유는 reason에 추가) :   {"result": "UNKNOWN", "reason": ""}`;
-  } else if (checkId === '6') {
-    //상품 라벨지에 한글표시사항이 부착되어 있는가?
-    return '1';
-  } else if (checkId === '7') {
-    //상품 라벨지에 상품판매가가 노출되어 있지 않은가?
-    return '1';
+    정확할 경우:   {"result": "pass", "reason": ""}  
+    틀렸을 경우 (잘못된 항목과 이유를 포함):   {"result": "fail", "reason": ""}  
+    확인할 수 없는 오류가 발생한 경우:   {"result": "unknown", "reason": ""}`;
+
+  if (checkId === 'product_barcode_equal') {
+    return `다음 정보를 확인하세요. 
+    1. 상품 사진에 보이는 바코드가 ${gooodsBarcode} 값과 동일한가?
+    ${resultFormat}
+    `;
+  } else if (checkId === 'product_expirationDate_equal_or_future') {
+    return `다음 정보를 확인하세요. 
+    1. 상품에 기재된 소비기한 (유통기한)이 ${expireDate} 와 같거나 그 이후인가?
+    ${resultFormat}
+    `;
+  } else if (checkId === 'product_korean_labeling_exist') {
+    return `다음 정보를 확인하세요. 
+    1. 상품 라벨지에 한글표시사항이 존재해야 합니다.?
+    ${resultFormat}
+    `;
+  } else if (checkId === 'product_price_exist') {
+    return `다음 정보를 확인하세요. 
+    1. 상품 라벨지에 상품가격이 보이면 안된다.
+    ${resultFormat}
+    `;
+  } else if (checkId === 'product_expirationDate_equal_box') {
+    return `다음 정보를 확인하세요. 
+    1. 상품의 소비기한과 박스의 소비기한은 동일해야 합니다..
+    ${resultFormat}
+    `;
+  } else if (checkId === 'box_product_barcode_different') {
+    return `다음 정보를 확인하세요.
+    1. 사진상에 박스에 부착된 바코드가 존재 한다면 그 바코드 값은 ${gooodsBarcode} 값과 달라야 합니다.
+    2. 만약 박스가 있지만, 바코드가 존재하지 않는 경우는 pass야
+    ${resultFormat}
+    `;
   }
 }

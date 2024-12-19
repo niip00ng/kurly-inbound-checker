@@ -26,11 +26,6 @@ const defaultCheckItems = [
     check: false,
   },
   {
-    id: 'product_expirationDate_equal_box',
-    title: '박스의 소비기한과 실상품의 소비기한이 일치해야합니다.',
-    check: false,
-  },
-  {
     id: 'box_product_barcode_different',
     title: '외박스의 바코드는 가리거나, 상품의 바코드와 달라야합니다.',
     check: false,

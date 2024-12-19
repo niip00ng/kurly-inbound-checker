@@ -43,14 +43,14 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>이미지 검수 결과</Text>
 
-            {gptResponse?.result === 'SUCCESS' && (
+            {gptResponse?.result === 'pass' && (
               <LottieView
                 source={require('../../../assets/lottie/success_check.json')} // Lottie 파일 경로
                 autoPlay
                 style={[{marginBottom: 40}, styles.lottie]}
               />
             )}
-            {gptResponse?.result === 'FAIL' && (
+            {gptResponse?.result === 'fail' && (
               <>
                 <LottieView
                   source={require('../../../assets/lottie/error.json')} // Lottie 파일 경로
@@ -60,7 +60,7 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
                 <Text style={styles.modalText}>{gptResponse?.reason}</Text>
               </>
             )}
-            {gptResponse?.result === 'UNKNOWN' && (
+            {gptResponse?.result === 'unknown' && (
               <>
                 <Fontisto
                   name={'question'}

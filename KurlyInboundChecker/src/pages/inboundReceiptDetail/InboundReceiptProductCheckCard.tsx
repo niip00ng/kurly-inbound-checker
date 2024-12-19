@@ -20,7 +20,7 @@ import {
   GptProductCheckResponse,
   GptResponse,
 } from './api/chatGpt';
-import {getPrompt} from './api/prompt';
+import {getProductCheckPrompt} from './api/prompt';
 import {useLoading} from '@pages/common/LoadingContext';
 import {updateOneCheckItem} from '../inboundReceiptListView/inboundProductCheckItemStorage';
 import {fetchInboundReceipts} from '../inboundReceiptListView/inboundReceiptsThunks';
@@ -103,15 +103,19 @@ const InboundReceiptProductCheckCard: React.FC<
         if (!selectedCheckItem) {
           return;
         }
-        const prompt = getPrompt(selectedCheckItem?.id);
+        const prompt = getProductCheckPrompt(
+          selectedCheckItem?.id,
+          product.barcode,
+          product.expiredDate,
+        );
 
         if (!prompt) {
           return;
         }
 
         const response: GptResponse = await getGptCheck(formData, prompt);
-
-        if (response.result === 'SUCCESS') {
+        console.log(response);
+        if (response.result === 'pass') {
           updateCheckItem();
         }
 
