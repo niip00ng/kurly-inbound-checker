@@ -125,7 +125,6 @@ const InboundReceiptProductCheckCard: React.FC<
       setGptModalVisible(true);
       console.log('API 응답:', response);
     } catch (error) {
-      console.error('이미지 처리 중 오류 발생:', error);
     } finally {
       hideLoading(); // 로딩 종료
     }
@@ -148,7 +147,6 @@ const InboundReceiptProductCheckCard: React.FC<
       setGptMultiChecks(response);
       setGptMultiModalVisible(true);
     } catch (error) {
-      console.error('이미지 처리 중 오류 발생:', error);
     } finally {
       hideLoading(); // 로딩 종료
     }

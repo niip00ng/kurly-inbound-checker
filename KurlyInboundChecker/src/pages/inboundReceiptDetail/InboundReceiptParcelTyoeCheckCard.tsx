@@ -87,7 +87,6 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
         await getAllPictureNormalTypeCheck(formData);
       setGptMultiChecks(response);
     } catch (error) {
-      console.error('이미지 처리 중 오류 발생:', error);
     } finally {
       hideLoading(); // 로딩 종료
     }
