@@ -11,6 +11,7 @@ import {ToastProvider} from 'react-native-toast-notifications';
 import GlobalLoading from '@pages/common/GlobalLoading';
 import {LoadingProvider} from './src/pages/common/LoadingContext';
 import Notification from '@pages/notification';
+import BarcodeScanner from '@pages/barcodeScanner';
 
 function App(): React.JSX.Element {
   const RootStack = createNativeStackNavigator();
@@ -31,11 +32,21 @@ function App(): React.JSX.Element {
         <Provider store={store}>
           <NavigationContainer>
             <RootStack.Navigator
-              screenOptions={{headerShown: false}}
+              screenOptions={{
+                headerShown: false,
+              }}
               initialRouteName="Splash">
               <RootStack.Group>
                 <RootStack.Screen name="Splash" component={Splash} />
                 <RootStack.Screen name="Main" component={Main} />
+                <RootStack.Screen
+                  name="BarcodeScanner"
+                  component={BarcodeScanner}
+                  options={{
+                    animation: 'fade_from_bottom',
+                    gestureEnabled: true,
+                  }}
+                />
                 <RootStack.Screen
                   name="InboundReceiptDetail"
                   component={InboundReceiptDetail}
@@ -43,7 +54,11 @@ function App(): React.JSX.Element {
                 <RootStack.Screen
                   name="Notification"
                   component={Notification}
-                  options={{presentation: 'containedTransparentModal'}}
+                  options={{
+                    presentation: 'modal',
+                    animation: 'fade_from_bottom',
+                    gestureEnabled: true,
+                  }}
                 />
               </RootStack.Group>
             </RootStack.Navigator>

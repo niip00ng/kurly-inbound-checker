@@ -13,6 +13,7 @@ import TabIcon from './TabIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import BarcodeScanner from '../barcodeScanner';
 
 const Tab = createBottomTabNavigator();
 
@@ -92,16 +93,10 @@ const Main = (props: any) => {
                   }
                 />
               );
-            } else if (name === 'Barcode') {
+            } else if (name === 'BarcodeScanner') {
               return (
                 <TabIcon
-                  icon={
-                    <Ionicons
-                      name={active() ? 'barcode' : 'barcode-outline'}
-                      size={25}
-                      color="#ffffff"
-                    />
-                  }
+                  icon={<Ionicons name={'barcode'} size={25} color="#ffffff" />}
                 />
               );
             }
@@ -110,7 +105,11 @@ const Main = (props: any) => {
             <TouchableOpacity
               key={route.key}
               onPress={() => {
-                navigation.navigate(route.name);
+                if (route.name === 'BarcodeScanner') {
+                  props.navigation.navigate(route.name);
+                } else {
+                  navigation.navigate(route.name);
+                }
               }}
               style={s.tabOptionWrapper}>
               {icon(route.name, index)}
@@ -138,13 +137,7 @@ const Main = (props: any) => {
             header: () => <CustomHeader title="입고 발주서 목록" />, // 커스텀 헤더
           }}
         />
-        <Tab.Screen
-          component={Settings}
-          name="Barcode"
-          options={{
-            header: () => <CustomHeader title="더보기" />, // 커스텀 헤더
-          }}
-        />
+        <Tab.Screen component={BarcodeScanner} name="BarcodeScanner" />
         <Tab.Screen
           component={Settings}
           name="Settings"
