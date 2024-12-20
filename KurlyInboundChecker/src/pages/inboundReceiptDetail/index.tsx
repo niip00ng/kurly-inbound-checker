@@ -19,7 +19,7 @@ const InboundReceiptDetail = () => {
   const route = useRoute();
   const {code} = route.params as {code: string}; // 단순히 code만 전달받음
   const inboundReceiptsSlice: Array<InboundReceiptItem> = useSelector(
-    (state: RootState) => state.InboundReceipts.inboundReceipts,
+    (state: RootState) => state.inboundReceipts.inboundReceipts,
   );
 
   const [inboundReceipt, setInboundReceipt] =
@@ -58,8 +58,8 @@ const InboundReceiptDetail = () => {
 
   const completedParcelType = () => {
     return (
-      inboundReceipt.inboundTypeCkeckList.filter(e => e.check).length ===
-      inboundReceipt.inboundTypeCkeckList.length
+      inboundReceipt.inboundTypeCheckList.filter(e => e.check).length ===
+      inboundReceipt.inboundTypeCheckList.length
     );
   };
 
@@ -151,16 +151,16 @@ const InboundReceiptDetail = () => {
                       },
                     ]}>
                     {
-                      inboundReceipt.inboundTypeCkeckList.filter(e => e.check)
+                      inboundReceipt.inboundTypeCheckList.filter(e => e.check)
                         .length
                     }{' '}
-                    / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
+                    / {inboundReceipt.inboundTypeCheckList.length}개 체크 완료
                   </Text>
                 </View>
                 <InboundReceiptParcelTypeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
                   inboundType={inboundReceipt.inboundType}
-                  checkList={inboundReceipt.inboundTypeCkeckList}
+                  checkList={inboundReceipt.inboundTypeCheckList}
                 />
               </View>
             )}
@@ -191,16 +191,16 @@ const InboundReceiptDetail = () => {
                       },
                     ]}>
                     {
-                      inboundReceipt.inboundTypeCkeckList.filter(e => e.check)
+                      inboundReceipt.inboundTypeCheckList.filter(e => e.check)
                         .length
                     }{' '}
-                    / {inboundReceipt.inboundTypeCkeckList.length}개 체크 완료
+                    / {inboundReceipt.inboundTypeCheckList.length}개 체크 완료
                   </Text>
                 </View>
                 <InboundReceiptParcelTypeCheckCard
                   inboundReceiptCode={inboundReceipt.code}
                   inboundType={inboundReceipt.inboundType}
-                  checkList={inboundReceipt.inboundTypeCkeckList}
+                  checkList={inboundReceipt.inboundTypeCheckList}
                 />
               </View>
             )}
