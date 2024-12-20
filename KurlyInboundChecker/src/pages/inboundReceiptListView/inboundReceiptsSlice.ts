@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSelector} from 'reselect';
 
+// 데이터 타입 정의
 export interface ProductInfo {
   goodsCode: string;
   barcode: string;
@@ -20,14 +22,9 @@ export interface InboundReceiptItem {
   inboundSimplePlace: string;
   inboundPlace: string;
   inboundType: string;
-  inboundTypeCkeckList: Array<CheckItem>;
+  inboundTypeCheckList: Array<CheckItem>;
   inboundStatus: string;
   products: Array<ProductInfo>;
-}
-
-export interface InboundReceiptsState {
-  loading: boolean;
-  inboundReceipts: Array<InboundReceiptItem>;
 }
 
 export interface CheckItem {
@@ -36,16 +33,23 @@ export interface CheckItem {
   check: boolean;
 }
 
+export interface InboundReceiptsState {
+  loading: boolean;
+  inboundReceipts: Array<InboundReceiptItem>;
+}
+
+// 초기 상태 설정
 const initialState: InboundReceiptsState = {
   loading: false,
   inboundReceipts: [],
 };
 
+// 슬라이스 생성
 const inboundReceiptsSlice = createSlice({
   name: 'inboundReceipts',
   initialState,
   reducers: {
-    setLoadingSlice(state, action) {
+    setLoadingSlice(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
     setInboundReceipts(
@@ -77,6 +81,22 @@ const inboundReceiptsSlice = createSlice({
   },
 });
 
+// 셀렉터 정의 (필터링된 데이터를 가져오는 셀렉터)
+export const selectInboundReceipts = (state: {
+  inboundReceipts: InboundReceiptsState;
+}) => {
+  return state?.inboundReceipts.inboundReceipts;
+};
+
+// 필터링된 발주서 데이터를 반환하는 셀렉터
+export const selectFilteredInboundReceipts = createSelector(
+  [selectInboundReceipts],
+  inboundReceipts => {
+    return inboundReceipts;
+  },
+);
+
+// 액션과 리듀서 내보내기
 export const {
   setInboundReceipts,
   addInboundReceipt,
@@ -84,4 +104,5 @@ export const {
   setLoadingSlice,
 } = inboundReceiptsSlice.actions;
 
+// 슬라이스의 리듀서 내보내기
 export default inboundReceiptsSlice.reducer;

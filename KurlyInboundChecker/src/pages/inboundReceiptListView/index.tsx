@@ -1,27 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@modules/store';
 import {InboundReceiptItem} from '@pages/inboundReceiptListView/inboundReceiptsSlice';
 import {fetchInboundReceipts} from './inboundReceiptsThunks';
 import type {AppDispatch} from '@modules/store';
+import InboundReciptCard from './InboundReciptCard';
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const inboundReceipts: Array<InboundReceiptItem> = useSelector(
-    (state: RootState) => state.InboundReceipts.inboundReceipts,
+    (state: RootState) => state.inboundReceipts.inboundReceipts,
   );
 
   const navigation: any = useNavigation();
@@ -43,162 +33,17 @@ const Home = () => {
     navigation.navigate('InboundReceiptDetail', {code: inboundReceipt.code});
   };
 
-  const renderInboundReciptCard = ({item}: {item: InboundReceiptItem}) => {
-    const checkProductYn = () => {
-      return (
-        item.products.filter(product => {
-          if (product.checkList.filter(e => !e.check).length > 0) {
-            return false;
-          }
-
-          return true;
-        }).length === item.products.length
-      );
-    };
-
-    const checkParcelTypeYn = () => {
-      return (
-        item.inboundTypeCkeckList.filter(e => e.check).length ===
-        item.inboundTypeCkeckList.length
-      );
-    };
-
-    const allChecked = () => {
-      return checkParcelTypeYn() && checkProductYn();
-    };
-
-    return (
-      <TouchableOpacity
-        style={[
-          s.card,
-          {
-            backgroundColor: allChecked() ? '#FFFFFF50' : '#DDDDDD',
-          },
-        ]}
-        activeOpacity={0.7}
-        onPress={() => handleCardPress(item)}>
-        <View style={[s.cardRow, {justifyContent: 'space-between'}]}>
-          <View style={[s.cardLabel, {marginBottom: 10}]}>
-            <Ionicons
-              name={'barcode'}
-              size={20}
-              color={'#222222'}
-              style={{marginRight: 5}}
-            />
-            <Text style={s.code}>{item.code}</Text>
-          </View>
-          <Text style={allChecked() ? s.statusComplete : s.statusReady}>
-            {allChecked() ? '완료' : '확인중'}
-          </Text>
-        </View>
-
-        <View style={s.cardRow}>
-          <View style={s.cardLabel}>
-            <MaterialCommunityIcons
-              name={'calendar-arrow-left'}
-              size={18}
-              color={'#222222'}
-              style={{marginRight: 5}}
-            />
-            <Text style={s.infoLabel}>입고 예정일</Text>
-          </View>
-
-          <Text style={s.info}>{item.inboundDate}</Text>
-        </View>
-        <View style={s.cardRow}>
-          <View style={s.cardLabel}>
-            <MaterialCommunityIcons
-              name={'calendar-arrow-right'}
-              size={18}
-              color={'#222222'}
-              style={{marginRight: 5}}
-            />
-            <Text style={s.infoLabel}>발주 날짜</Text>
-          </View>
-
-          <Text style={s.info}>{item.inboundOrderDate}</Text>
-        </View>
-        <View style={s.cardRow}>
-          <View style={s.cardLabel}>
-            <MaterialIcons
-              name={'factory'}
-              size={16}
-              color={'#222222'}
-              style={{marginRight: 5, marginLeft: 1}}
-            />
-            <Text style={s.infoLabel}>입고지</Text>
-          </View>
-          <Text style={s.info}>{item.inboundSimplePlace}</Text>
-        </View>
-        <View style={s.cardRow}>
-          <View style={s.cardLabel}>
-            <MaterialIcons
-              name={'category'}
-              size={16}
-              color={'#222222'}
-              style={{marginRight: 5, marginLeft: 1}}
-            />
-            <Text style={s.infoLabel}>유형</Text>
-          </View>
-
-          <Text style={s.info}>
-            {item.inboundType === 'NORMAL'
-              ? '일반입고(입고시간없음)'
-              : '택배입고'}
-          </Text>
-        </View>
-        <View style={[s.cardRow, {alignItems: 'flex-start'}]}>
-          <View style={[s.cardLabel, {marginTop: 0}]}>
-            <MaterialCommunityIcons
-              name={'package'}
-              size={16}
-              color={'#222222'}
-              style={{marginRight: 5, marginLeft: 1}}
-            />
-            <Text style={s.infoLabel}>입고상품</Text>
-          </View>
-
-          <View>
-            {item.products.map((product, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginBottom: 4,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#222222',
-                    }}>
-                    {product.goodsName}
-                  </Text>
-                  {/* <FastImage
-                      style={{
-                        marginLeft: 10,
-                        width: 30,
-                        height: 30,
-                        borderRadius: 5,
-                      }}
-                      source={{uri: product.imageUrl}}
-                    /> */}
-                </View>
-              );
-            })}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <SafeAreaView style={s.container}>
       <LinearGradient colors={['#9032C7', '#333333']}>
         <FlatList
           data={inboundReceipts}
-          renderItem={renderInboundReciptCard}
+          renderItem={({item}) => (
+            <InboundReciptCard
+              item={item}
+              onPress={() => handleCardPress(item)}
+            />
+          )}
           keyExtractor={item => item.code}
           style={{height: '100%'}}
           contentContainerStyle={s.listContainer}
