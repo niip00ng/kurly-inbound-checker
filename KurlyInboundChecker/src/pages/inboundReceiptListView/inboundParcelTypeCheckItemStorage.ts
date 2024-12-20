@@ -6,17 +6,17 @@ const INBOUND_PARCEL_TYPE_CHECK_ITEM = 'INBOUND_PARCEL_TYPE_CHECK_ITEM:';
 const defaultNormalCheckItems = [
   {
     id: '1',
-    title: '겉박스가 50개 이상일 때는 반드시 파레트에 적치되어 있어야 합니다.',
+    title: '외박스가 50개 이상일 시 파레트에 적치되어 있어야 합니다. ',
     check: false,
   },
   {
     id: 'pallet_arrangement',
-    title: '박스가 올바르게 정렬된 상태여야 합니다.',
+    title: '박스가 올바르게 정렬된 상태로 파레트에 적치되어 있어야 합니다.',
     check: false,
   },
   {
     id: 'pallet_type',
-    title: '파레트는 빨강,파랑,녹색만 허용됩니다. (AJ / KPP)',
+    title: '나무나 일회용 파레트를 사용하지 않아야 합니다.',
     check: false,
   },
 ];

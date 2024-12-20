@@ -11,6 +11,17 @@ interface InboundReciptCardProps {
   onPress: () => void;
 }
 
+// Color constants 정의
+const Colors = {
+  primaryText: '#222222',
+  backgroundCard: '#dddddd',
+  backgroundCardAllCheck: '#888888',
+  border: '#cccccc',
+  borderAllCheck: '#888888',
+  statusComplete: '#222222', // 검수 완료 상태 텍스트 색상
+  statusReady: '#222222', // 검수중 상태 텍스트 색상
+};
+
 const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
   item,
   onPress,
@@ -43,44 +54,42 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
       style={[
         styles.card,
         {
-          backgroundColor: allChecked() ? '#FFFFFF50' : '#DDDDDD',
+          backgroundColor: allChecked()
+            ? Colors.backgroundCardAllCheck
+            : Colors.backgroundCard,
         },
       ]}
-      activeOpacity={0.7}
+      activeOpacity={0.9}
       onPress={onPress}>
       <View style={[styles.cardRow, {justifyContent: 'space-between'}]}>
-        <View style={[styles.cardLabel, {marginBottom: 10}]}>
+        <View style={[styles.cardLabel, {marginBottom: 0}]}>
           <Ionicons
             name={'barcode'}
             size={20}
-            color={'#222222'}
+            color={Colors.primaryText}
             style={{marginRight: 5}}
           />
           <Text style={styles.code}>{item.code}</Text>
         </View>
         <Text style={allChecked() ? styles.statusComplete : styles.statusReady}>
-          {allChecked() ? '완료' : '확인중'}
+          {allChecked() ? '검수 완료🎉' : '검수중 👀'}
         </Text>
       </View>
-
-      <View style={styles.cardRow}>
-        <View style={styles.cardLabel}>
-          <MaterialCommunityIcons
-            name={'calendar-arrow-left'}
-            size={18}
-            color={'#222222'}
-            style={{marginRight: 5}}
-          />
-          <Text style={styles.infoLabel}>입고 예정일</Text>
-        </View>
-        <Text style={styles.info}>{item.inboundDate}</Text>
-      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: allChecked()
+            ? Colors.borderAllCheck
+            : Colors.border,
+          marginBottom: 8,
+        }}
+      />
       <View style={styles.cardRow}>
         <View style={styles.cardLabel}>
           <MaterialCommunityIcons
             name={'calendar-arrow-right'}
             size={18}
-            color={'#222222'}
+            color={Colors.primaryText}
             style={{marginRight: 5}}
           />
           <Text style={styles.infoLabel}>발주 날짜</Text>
@@ -89,10 +98,23 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
       </View>
       <View style={styles.cardRow}>
         <View style={styles.cardLabel}>
+          <MaterialCommunityIcons
+            name={'calendar-arrow-left'}
+            size={18}
+            color={Colors.primaryText}
+            style={{marginRight: 5}}
+          />
+          <Text style={styles.infoLabel}>입고 예정일</Text>
+        </View>
+        <Text style={styles.info}>{item.inboundDate}</Text>
+      </View>
+
+      <View style={styles.cardRow}>
+        <View style={styles.cardLabel}>
           <MaterialIcons
             name={'factory'}
             size={16}
-            color={'#222222'}
+            color={Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
           <Text style={styles.infoLabel}>입고지</Text>
@@ -104,10 +126,10 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
           <MaterialIcons
             name={'category'}
             size={16}
-            color={'#222222'}
+            color={Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
-          <Text style={styles.infoLabel}>유형</Text>
+          <Text style={styles.infoLabel}>입고유형</Text>
         </View>
         <Text style={styles.info}>
           {item.inboundType === 'NORMAL'
@@ -115,29 +137,43 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
             : '택배입고'}
         </Text>
       </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: allChecked()
+            ? Colors.borderAllCheck
+            : Colors.border,
+          marginBottom: 6,
+          marginTop: 4,
+        }}
+      />
       <View style={[styles.cardRow, {alignItems: 'flex-start'}]}>
         <View style={[styles.cardLabel, {marginTop: 0}]}>
           <MaterialCommunityIcons
             name={'package'}
             size={16}
-            color={'#222222'}
+            color={Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
-          <Text style={styles.infoLabel}>입고상품</Text>
+          <Text style={styles.infoLabel}>
+            상품{' '}
+            <Text style={{fontWeight: 'bold'}}>{item.products.length}개</Text>
+          </Text>
         </View>
 
-        <View>
+        <View style={{width: '60%'}}>
           {item.products.map((product, index) => {
             return (
-              <View
-                key={index}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 4,
-                }}>
-                <Text style={{color: '#222222'}}>{product.goodsName}</Text>
+              <View key={index} style={{}}>
+                <Text
+                  style={{
+                    color: Colors.primaryText,
+                  }}
+                  numberOfLines={1} // 한 줄로 제한
+                  ellipsizeMode="tail" // 텍스트가 길어지면 '...'으로 표시
+                >
+                  {product.goodsName}
+                </Text>
               </View>
             );
           })}
@@ -150,6 +186,7 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     padding: 16,
+    paddingVertical: 12,
     borderRadius: 20,
     marginBottom: 16,
     elevation: 2,
@@ -157,20 +194,20 @@ const styles = StyleSheet.create({
   code: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#222222',
+    color: Colors.primaryText,
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
     fontWeight: '300',
-    color: '#222222',
+    color: Colors.primaryText,
     marginBottom: 4,
     minWidth: 100,
   },
   infoLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#222222',
+    color: Colors.primaryText,
     marginBottom: 4,
     minWidth: 100,
   },
@@ -181,17 +218,16 @@ const styles = StyleSheet.create({
   cardRow: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 0,
   },
   statusReady: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#222222',
+    color: Colors.statusReady,
   },
   statusComplete: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#222222',
+    color: Colors.statusComplete,
   },
 });
 

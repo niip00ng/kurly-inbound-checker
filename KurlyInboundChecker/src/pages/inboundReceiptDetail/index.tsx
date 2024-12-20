@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Platform,
+} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import TopComponent from '../TopComponent';
 import {
@@ -77,7 +84,7 @@ const InboundReceiptDetail = () => {
         titleComponrnt={<Text style={s.title}>발주서 체크리스트</Text>}
       />
       <View style={s.wrapper}>
-        <LinearGradient colors={['#333333', '#000000']}>
+        <LinearGradient colors={['#222222', '#222222']}>
           <ScrollView
             style={{height: '100%'}}
             contentContainerStyle={s.scrollWrapper}
@@ -208,44 +215,33 @@ const InboundReceiptDetail = () => {
         </LinearGradient>
 
         {/* 하단 footer */}
-        <SafeAreaView
-          style={[
-            s.footer,
-            {
-              backgroundColor:
-                totalCheckItemSize() === checkCompletedSize()
-                  ? '#EEEEEE'
-                  : '#333333',
-            },
-          ]}>
-          <Text
-            style={[
-              s.footerText,
-              {
-                color:
-                  totalCheckItemSize() === checkCompletedSize()
-                    ? '#666666'
-                    : '#999999',
-              },
-            ]}>
-            {checkCompletedSize()} / {totalCheckItemSize()} 항목 체크 완료
-          </Text>
-          {totalCheckItemSize() === checkCompletedSize() && (
-            <LottieView
-              source={require('../../../assets/lottie/success_check.json')}
-              autoPlay
-              loop
+        <LinearGradient
+          colors={[
+            totalCheckItemSize() === checkCompletedSize()
+              ? '#C237ED'
+              : '#333333',
+            totalCheckItemSize() === checkCompletedSize()
+              ? '#DE6D7E'
+              : '#333333',
+          ]} // 그라데이션 색상 설정
+          start={{x: 0, y: 0}} // 시작점: 왼쪽 상단
+          end={{x: 1, y: 1}}
+          style={s.footer}>
+          <SafeAreaView style={[s.footerSafe]}>
+            <Text
               style={[
+                s.footerText,
                 {
-                  marginTop: 5,
-                  marginLeft: 5,
-                  width: 30,
-                  height: 30,
+                  color:
+                    totalCheckItemSize() === checkCompletedSize()
+                      ? '#ffffff'
+                      : '#999999',
                 },
-              ]}
-            />
-          )}
-        </SafeAreaView>
+              ]}>
+              {checkCompletedSize()} / {totalCheckItemSize()} 항목 체크 완료
+            </Text>
+          </SafeAreaView>
+        </LinearGradient>
       </View>
     </>
   );
@@ -285,10 +281,7 @@ const s = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#333333',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+
     // iOS 그림자
     shadowColor: '#000000', // 그림자 색
     shadowOffset: {width: 0, height: -10}, // 그림자 방향 (위쪽으로 5px)
@@ -296,10 +289,16 @@ const s = StyleSheet.create({
     shadowRadius: 5, // 그림자 블러 반경
     // Android 그림자 (elevation은 그림자를 생성함)
     elevation: 10, // 그림자의 높이
+    paddingBottom: Platform.OS === 'ios' ? 0 : 15,
   },
-
+  footerSafe: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   footerText: {
-    marginTop: 10,
+    marginTop: 15,
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 16,

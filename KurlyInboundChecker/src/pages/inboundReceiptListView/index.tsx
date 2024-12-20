@@ -35,7 +35,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={s.container}>
-      <LinearGradient colors={['#9032C7', '#333333']}>
+      <LinearGradient colors={['#222222', '#444444']}>
         <FlatList
           data={inboundReceipts}
           renderItem={({item}) => (

@@ -38,6 +38,7 @@ import {
   pickMultipleImages,
   pickSingleImage,
 } from '../../common/imagePickerUtil';
+import {launchCamera} from 'react-native-image-picker';
 if (
   Platform.OS === 'android' &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -113,7 +114,7 @@ const InboundReceiptProductCheckCard: React.FC<
         product.barcode,
         product.expiredDate,
       );
-
+      console.log(product.barcode, prompt);
       if (!prompt) {
         return;
       }
@@ -152,6 +153,63 @@ const InboundReceiptProductCheckCard: React.FC<
     } finally {
       hideLoading(); // 로딩 종료
     }
+  };
+  const handleCameraSelection = () => {
+    // 후면 카메라를 여는 함수
+    launchCamera(
+      {mediaType: 'photo'}, // cameraType을 'back'으로 설정
+      async response => {
+        if (response.didCancel) {
+          console.log('User cancelled camera picker');
+          return;
+        } else if (response.errorCode) {
+          console.log('Camera Error: ', response.errorMessage);
+          return;
+        }
+
+        if (!response.assets) {
+          return;
+        }
+
+        const selectedImageUri = response.assets[0].uri;
+
+        if (!selectedCheckItem) {
+          return;
+        }
+        // selectedImageUri를 createFormDataFromImages 함수에 전달
+        const formData = createFormDataFromImages(
+          [
+            {
+              uri: selectedImageUri,
+              name: 'selectedImage.jpg',
+              type: 'image/jpeg',
+            },
+          ],
+          'file',
+        );
+
+        const prompt = getProductCheckPrompt(
+          selectedCheckItem?.id,
+          product.barcode,
+          product.expiredDate,
+        );
+        console.log(product.barcode, prompt);
+        if (!prompt) {
+          return;
+        }
+
+        const gptResponse: GptResponse = await getGptCheck(formData, prompt);
+
+        if (gptResponse.result === 'pass') {
+          updateCheckItem();
+        }
+
+        setGptResponse(gptResponse);
+        setGptModalVisible(true);
+        // 이제 formData를 서버에 전송하거나 다른 용도로 사용할 수 있습니다.
+        console.log(formData);
+      },
+    );
   };
 
   const updateCheckItem = async () => {
@@ -306,6 +364,10 @@ const InboundReceiptProductCheckCard: React.FC<
       <CheckTypeSelectModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        clickCamera={() => {
+          handleCameraSelection(); // 카메라를 여는 함수 호출
+          setModalVisible(false);
+        }}
         clickGallary={() => {
           handleGallerySelection();
           setModalVisible(false);

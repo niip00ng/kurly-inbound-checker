@@ -213,6 +213,9 @@ const InboundReceiptParcelTypeCheckCard: React.FC<Props> = ({
           handleGallerySelection();
           setModalVisible(false);
         }}
+        clickCamera={() => {
+          setModalVisible(false);
+        }}
         clickManual={() => {
           setModalVisible(false);
           updateCheckItem();

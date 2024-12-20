@@ -16,22 +16,27 @@ const defaultCheckItems = [
     check: false,
   },
   {
+    id: 'product_barcode_equal_all',
+    title: '상품의 모든 바코드는 동일해야 합니다.',
+    check: false,
+  },
+  {
     id: 'product_korean_labeling_exist',
     title: '상품 라벨지에 한글표시사항이 존재해야 합니다.',
     check: false,
   },
   {
-    id: 'product_price_exist',
+    id: 'product_price_not_exist',
     title: '상품 라벨지에 상품판매가는 노출되어선 안됩니다.',
     check: false,
   },
   {
-    id: 'box_product_barcode_different',
+    id: 'box_barcode_not_exist',
     title: '외박스의 바코드는 가리거나, 상품의 바코드와 달라야합니다.',
     check: false,
   },
   {
-    id: 'product_expirationDate_equal_box',
+    id: 'box_product_expirationDate_equal',
     title: '외박스의 소비기한(유통기한)과 상품의 소비기한은 일치해야 합니다.',
     check: false,
   },

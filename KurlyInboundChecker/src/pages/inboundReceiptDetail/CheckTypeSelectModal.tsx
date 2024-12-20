@@ -21,6 +21,7 @@ interface CheckModalProps {
   onClose: () => void;
   clickGallary: () => void;
   clickManual: () => void;
+  clickCamera: () => void;
   selectedCheckItem: CheckItem | null;
 }
 
@@ -29,6 +30,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
   onClose,
   clickGallary,
   clickManual,
+  clickCamera,
   selectedCheckItem,
 }) => {
   const [manualCheck, setManualCheck] = useState(false);
@@ -102,7 +104,7 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles.selectCheckType}
-                  onPress={() => {}}>
+                  onPress={clickCamera}>
                   <Fontisto
                     name={'camera'}
                     size={18}

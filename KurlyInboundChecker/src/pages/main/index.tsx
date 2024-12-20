@@ -21,7 +21,11 @@ const Main = (props: any) => {
   const navigation: any = useNavigation();
 
   const CustomHeader = ({title}: {title: string}) => (
-    <LinearGradient colors={['#65039E', '#9032C7']} style={s.header}>
+    <LinearGradient
+      colors={['#222222', '#222222']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}
+      style={s.header}>
       <View
         style={{
           borderBottomLeftRadius: 10,
@@ -65,7 +69,7 @@ const Main = (props: any) => {
 
   function TabOption({state, navigation}: any) {
     return (
-      <GestureHandlerRootView style={s.wrapper}>
+      <View style={s.wrapper}>
         {state.routes.map((route: {key: string; name: string}, index: any) => {
           const icon = (name: string, selectIndex: number) => {
             const active = () => state.index === selectIndex;
@@ -123,7 +127,7 @@ const Main = (props: any) => {
             </TouchableOpacity>
           );
         })}
-      </GestureHandlerRootView>
+      </View>
     );
   }
 
@@ -167,9 +171,9 @@ const s = StyleSheet.create({
   wrapper: {
     zIndex: 1,
     flexDirection: 'row',
+    backgroundColor: '#444444',
     width: '100%',
     justifyContent: 'space-around',
-    backgroundColor: '#333333',
     paddingTop: 15,
     paddingBottom: Platform.OS === 'ios' && DeviceInfo.hasNotch() ? 25 : 15,
     ...Platform.select({
