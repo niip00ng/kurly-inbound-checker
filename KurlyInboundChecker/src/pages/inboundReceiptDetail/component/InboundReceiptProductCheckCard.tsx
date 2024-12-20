@@ -171,43 +171,49 @@ const InboundReceiptProductCheckCard: React.FC<
           return;
         }
 
-        const selectedImageUri = response.assets[0].uri;
+        showLoading();
+        try {
+          const selectedImageUri = response.assets[0].uri;
 
-        if (!selectedCheckItem) {
-          return;
+          if (!selectedCheckItem) {
+            return;
+          }
+          // selectedImageUri를 createFormDataFromImages 함수에 전달
+          const formData = createFormDataFromImages(
+            [
+              {
+                uri: selectedImageUri,
+                name: 'selectedImage.jpg',
+                type: 'image/jpeg',
+              },
+            ],
+            'file',
+          );
+
+          const prompt = getProductCheckPrompt(
+            selectedCheckItem?.id,
+            product.barcode,
+            product.expiredDate,
+          );
+          console.log(product.barcode, prompt);
+          if (!prompt) {
+            return;
+          }
+
+          const gptResponse: GptResponse = await getGptCheck(formData, prompt);
+
+          if (gptResponse.result === 'pass') {
+            updateCheckItem();
+          }
+
+          setGptResponse(gptResponse);
+          setGptModalVisible(true);
+          // 이제 formData를 서버에 전송하거나 다른 용도로 사용할 수 있습니다.
+          console.log(formData);
+        } catch (e) {
+        } finally {
+          hideLoading();
         }
-        // selectedImageUri를 createFormDataFromImages 함수에 전달
-        const formData = createFormDataFromImages(
-          [
-            {
-              uri: selectedImageUri,
-              name: 'selectedImage.jpg',
-              type: 'image/jpeg',
-            },
-          ],
-          'file',
-        );
-
-        const prompt = getProductCheckPrompt(
-          selectedCheckItem?.id,
-          product.barcode,
-          product.expiredDate,
-        );
-        console.log(product.barcode, prompt);
-        if (!prompt) {
-          return;
-        }
-
-        const gptResponse: GptResponse = await getGptCheck(formData, prompt);
-
-        if (gptResponse.result === 'pass') {
-          updateCheckItem();
-        }
-
-        setGptResponse(gptResponse);
-        setGptModalVisible(true);
-        // 이제 formData를 서버에 전송하거나 다른 용도로 사용할 수 있습니다.
-        console.log(formData);
       },
     );
   };
