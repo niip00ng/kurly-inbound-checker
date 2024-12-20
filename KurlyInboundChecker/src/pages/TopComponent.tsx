@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type PropTopComponent = {
@@ -14,7 +15,11 @@ const TopComponent: React.FC<React.PropsWithChildren<PropTopComponent>> = ({
 
   return (
     <>
-      <View style={s.tabOptionBox}>
+      <LinearGradient
+        colors={['#930EF2', '#5D61D0']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={s.tabOptionBox}>
         <TouchableOpacity
           style={{
             left: 5,
@@ -26,7 +31,7 @@ const TopComponent: React.FC<React.PropsWithChildren<PropTopComponent>> = ({
 
         {titleComponrnt && <>{titleComponrnt}</>}
         <View style={{minWidth: 30}} />
-      </View>
+      </LinearGradient>
     </>
   );
 };

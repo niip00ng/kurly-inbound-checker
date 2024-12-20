@@ -62,7 +62,7 @@ const InboundReceiptBaseInfoCard: React.FC<InboundReceiptInfoCardProps> = ({
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff10',
+    backgroundColor: '#ffffff35',
     borderRadius: 20,
     padding: 16,
     paddingVertical: 5,
@@ -89,7 +89,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     color: '#ffffff',
     flex: 1,
-    fontWeight: 'bold',
+    fontWeight: '400',
     flexWrap: 'wrap',
   },
 });

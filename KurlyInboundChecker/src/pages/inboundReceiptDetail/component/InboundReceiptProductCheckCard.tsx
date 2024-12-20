@@ -82,7 +82,7 @@ const InboundReceiptProductCheckCard: React.FC<
 
   const getChecklistTextColor = (checkList: {check: boolean}[]) => {
     const completedCount = checkList.filter(e => e.check).length;
-    return completedCount === checkList.length ? '#A1D9AE' : '#999999';
+    return completedCount === checkList.length ? '#8AFFA7' : '#999999';
   };
 
   const completedCount = product.checkList.filter(e => e.check).length;

@@ -75,7 +75,9 @@ const BarcodeScanner = () => {
           발주서 바코드 혹은 상품 바코드를 인식해 주세요
         </Text>
         <LinearGradient
-          colors={['#C237ED', '#DE6D7E']} // 그라데이션 색상 설정
+          colors={['#930EF2', '#5D61D0']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
           style={styles.camera} // 스타일을 LinearGradient로 감쌈
         >
           <Camera
@@ -104,9 +106,9 @@ const BarcodeScanner = () => {
                   setMatchedItems([]);
                 }}>
                 <LinearGradient
-                  colors={['#C237ED', '#DE6D7E']} // 그라데이션 색상 설정
-                  start={{x: 0, y: 0}} // 시작점: 왼쪽 상단
-                  end={{x: 1, y: 1}} // 끝점: 오른쪽 하단
+                  colors={['#930EF2', '#5D61D0']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 1}}
                   style={{
                     display: 'flex',
                     flexDirection: 'row',

@@ -107,9 +107,9 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
       onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <LinearGradient
-          colors={['#C237ED', '#DE6D7E']}
+          colors={['#930EF2', '#5D61D0']}
           start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
+          end={{x: 1, y: 1}}
           style={{
             padding: 2,
             borderRadius: 20,

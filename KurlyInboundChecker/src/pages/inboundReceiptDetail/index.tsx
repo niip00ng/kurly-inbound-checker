@@ -83,7 +83,7 @@ const InboundReceiptDetail = () => {
         titleComponrnt={<Text style={s.title}>발주서 체크리스트</Text>}
       />
       <View style={s.wrapper}>
-        <LinearGradient colors={['#222222', '#222222']}>
+        <LinearGradient colors={['#000000', '#000000']}>
           <ScrollView
             style={{height: '100%'}}
             contentContainerStyle={s.scrollWrapper}
@@ -217,10 +217,10 @@ const InboundReceiptDetail = () => {
         <LinearGradient
           colors={[
             totalCheckItemSize() === checkCompletedSize()
-              ? '#C237ED'
+              ? '#53BD78'
               : '#333333',
             totalCheckItemSize() === checkCompletedSize()
-              ? '#DE6D7E'
+              ? '#53BD78'
               : '#333333',
           ]} // 그라데이션 색상 설정
           start={{x: 0, y: 0}} // 시작점: 왼쪽 상단

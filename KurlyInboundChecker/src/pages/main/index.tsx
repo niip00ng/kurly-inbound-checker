@@ -22,9 +22,9 @@ const Main = (props: any) => {
 
   const CustomHeader = ({title}: {title: string}) => (
     <LinearGradient
-      colors={['#222222', '#222222']}
+      colors={['#930EF2', '#6440D3']}
       start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}
+      end={{x: 1, y: 1}}
       style={s.header}>
       <View
         style={{
@@ -69,7 +69,11 @@ const Main = (props: any) => {
 
   function TabOption({state, navigation}: any) {
     return (
-      <View style={s.wrapper}>
+      <LinearGradient
+        colors={['#5D0399', '#50127A']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={s.wrapper}>
         {state.routes.map((route: {key: string; name: string}, index: any) => {
           const icon = (name: string, selectIndex: number) => {
             const active = () => state.index === selectIndex;
@@ -127,7 +131,7 @@ const Main = (props: any) => {
             </TouchableOpacity>
           );
         })}
-      </View>
+      </LinearGradient>
     );
   }
 

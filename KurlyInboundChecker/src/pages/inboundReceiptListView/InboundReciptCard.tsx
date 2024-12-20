@@ -13,13 +13,14 @@ interface InboundReciptCardProps {
 
 // Color constants 정의
 const Colors = {
-  primaryText: '#222222',
-  backgroundCard: '#dddddd',
-  backgroundCardAllCheck: '#888888',
-  border: '#cccccc',
-  borderAllCheck: '#888888',
-  statusComplete: '#222222', // 검수 완료 상태 텍스트 색상
-  statusReady: '#222222', // 검수중 상태 텍스트 색상
+  primaryText: '#FFFFFF',
+  secondaryText: '#999999',
+  backgroundCard: '#ffffff35',
+  backgroundCardAllCheck: '#ffffff20',
+  border: '#FFFFFF30',
+  borderAllCheck: '#FFFFFF30',
+  statusComplete: '#8AFFA7', // 검수 완료 상태 텍스트 색상
+  statusReady: '#ffffff80', // 검수중 상태 텍스트 색상
 };
 
 const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
@@ -66,13 +67,19 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
           <Ionicons
             name={'barcode'}
             size={20}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5}}
           />
-          <Text style={styles.code}>{item.code}</Text>
+          <Text
+            style={[
+              styles.code,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
+            {item.code}
+          </Text>
         </View>
         <Text style={allChecked() ? styles.statusComplete : styles.statusReady}>
-          {allChecked() ? '검수 완료🎉' : '검수중 👀'}
+          {allChecked() ? '검수 완료' : '검수중'}
         </Text>
       </View>
       <View
@@ -89,24 +96,48 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
           <MaterialCommunityIcons
             name={'calendar-arrow-right'}
             size={18}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5}}
           />
-          <Text style={styles.infoLabel}>발주 날짜</Text>
+          <Text
+            style={[
+              styles.infoLabel,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
+            발주 날짜
+          </Text>
         </View>
-        <Text style={styles.info}>{item.inboundOrderDate}</Text>
+        <Text
+          style={[
+            styles.info,
+            {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+          ]}>
+          {item.inboundOrderDate}
+        </Text>
       </View>
       <View style={styles.cardRow}>
         <View style={styles.cardLabel}>
           <MaterialCommunityIcons
             name={'calendar-arrow-left'}
             size={18}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5}}
           />
-          <Text style={styles.infoLabel}>입고 예정일</Text>
+          <Text
+            style={[
+              styles.infoLabel,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
+            입고 예정일
+          </Text>
         </View>
-        <Text style={styles.info}>{item.inboundDate}</Text>
+        <Text
+          style={[
+            styles.info,
+            {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+          ]}>
+          {item.inboundDate}
+        </Text>
       </View>
 
       <View style={styles.cardRow}>
@@ -114,24 +145,46 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
           <MaterialIcons
             name={'factory'}
             size={16}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
-          <Text style={styles.infoLabel}>입고지</Text>
+          <Text
+            style={[
+              styles.infoLabel,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
+            입고지
+          </Text>
         </View>
-        <Text style={styles.info}>{item.inboundSimplePlace}</Text>
+        <Text
+          style={[
+            styles.info,
+            {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+          ]}>
+          {item.inboundSimplePlace}
+        </Text>
       </View>
       <View style={styles.cardRow}>
         <View style={styles.cardLabel}>
           <MaterialIcons
             name={'category'}
             size={16}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
-          <Text style={styles.infoLabel}>입고유형</Text>
+          <Text
+            style={[
+              styles.infoLabel,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
+            입고유형
+          </Text>
         </View>
-        <Text style={styles.info}>
+        <Text
+          style={[
+            styles.info,
+            {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+          ]}>
           {item.inboundType === 'NORMAL'
             ? '일반입고(입고시간없음)'
             : '택배입고'}
@@ -152,10 +205,14 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
           <MaterialCommunityIcons
             name={'package'}
             size={16}
-            color={Colors.primaryText}
+            color={allChecked() ? Colors.secondaryText : Colors.primaryText}
             style={{marginRight: 5, marginLeft: 1}}
           />
-          <Text style={styles.infoLabel}>
+          <Text
+            style={[
+              styles.infoLabel,
+              {color: allChecked() ? Colors.secondaryText : Colors.primaryText},
+            ]}>
             상품{' '}
             <Text style={{fontWeight: 'bold'}}>{item.products.length}개</Text>
           </Text>
@@ -167,7 +224,9 @@ const InboundReciptCard: React.FC<InboundReciptCardProps> = ({
               <View key={index} style={{}}>
                 <Text
                   style={{
-                    color: Colors.primaryText,
+                    color: allChecked()
+                      ? Colors.secondaryText
+                      : Colors.primaryText,
                   }}
                   numberOfLines={1} // 한 줄로 제한
                   ellipsizeMode="tail" // 텍스트가 길어지면 '...'으로 표시

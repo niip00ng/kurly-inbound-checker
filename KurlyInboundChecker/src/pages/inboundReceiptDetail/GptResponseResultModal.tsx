@@ -33,7 +33,7 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
       onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <LinearGradient
-          colors={['#C237ED', '#DE6D7E']}
+          colors={['#AC43F2', '#7175FA']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={{

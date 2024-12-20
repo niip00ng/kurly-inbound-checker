@@ -10,13 +10,17 @@ const Splash = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Main'); // 'Main' 컴포넌트로 이동
-    }, 1000);
+    }, 1500);
 
     return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머 정리
   }, [navigation]);
 
   return (
-    <LinearGradient colors={['#C237ED', '#333333']} style={s.wrapper}>
+    <LinearGradient
+      colors={['#930EF2', '#5D61D0']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}
+      style={s.wrapper}>
       <SafeAreaView>
         <LogoComponent animation={true} />
       </SafeAreaView>
