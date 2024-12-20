@@ -15,6 +15,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const width = Dimensions.get('window').width;
 import {CheckItem} from '../inboundReceiptListView/inboundReceiptsSlice';
+import FastImage from 'react-native-fast-image';
+const product_barcode_equal_all = require('../../../assets/image/product_barcode_equal_all.png');
+const product_barcode_equal = require('../../../assets/image/product_barcode_equal.png');
+const product_expirationDate_equal_or_future = require('../../../assets/image/product_expirationDate_equal_or_future.png');
+const product_korean_labeling_exist = require('../../../assets/image/product_korean_labeling_exist.png');
+const box_product_expirationDate_equal = require('../../../assets/image/box_product_expirationDate_equal.png');
 
 interface CheckModalProps {
   visible: boolean;
@@ -46,6 +52,23 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
     }
   }, [visible]);
 
+  const guideImage = () => {
+    if (selectedCheckItem?.id === 'product_barcode_equal') {
+      return product_barcode_equal;
+    } else if (
+      selectedCheckItem?.id === 'product_expirationDate_equal_or_future'
+    ) {
+      return product_expirationDate_equal_or_future;
+    } else if (selectedCheckItem?.id === 'product_korean_labeling_exist') {
+      return product_korean_labeling_exist;
+    } else if (selectedCheckItem?.id === 'box_product_expirationDate_equal') {
+      return box_product_expirationDate_equal;
+    } else if (selectedCheckItem?.id === 'product_barcode_equal_all') {
+      return product_barcode_equal_all;
+    }
+
+    return null;
+  };
   const handleManualCheck = () => {
     Animated.timing(selectCheckTypeOpacity, {
       toValue: 0,
@@ -94,6 +117,30 @@ const CheckTypeSelectModal: React.FC<CheckModalProps> = ({
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>체크 방법 선택</Text>
             <Text style={styles.modalText}>{selectedCheckItem?.title}</Text>
+            {guideImage() && (
+              <FastImage
+                resizeMode="contain"
+                style={{
+                  width: '100%',
+                  height: 200,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  justifyContent: 'flex-end',
+                }}
+                source={guideImage()}>
+                <View
+                  style={{
+                    backgroundColor: '#00000090',
+                    paddingVertical: 5,
+                    paddingLeft: 10,
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: '#dddddd', fontWeight: 'bold'}}>
+                    🟢 올바른 사진 ( 이미지 체크 시)
+                  </Text>
+                </View>
+              </FastImage>
+            )}
 
             {!manualCheck && (
               <Animated.View
@@ -220,7 +267,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   selectCheckTypeContainer: {
     display: 'flex',

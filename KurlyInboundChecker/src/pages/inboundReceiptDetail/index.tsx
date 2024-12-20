@@ -20,7 +20,6 @@ import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
 import InboundReceiptParcelTypeCheckCard from './component/InboundReceiptParcelTyoeCheckCard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import LottieView from 'lottie-react-native';
 
 const InboundReceiptDetail = () => {
   const route = useRoute();
