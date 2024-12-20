@@ -1137,6 +1137,8 @@ PODS:
     - React-jsi (= 0.73.6)
     - React-logger (= 0.73.6)
     - React-perflogger (= 0.73.6)
+  - ReactNativeCameraKit (13.0.0):
+    - React-Core
   - RNCAsyncStorage (2.1.0):
     - React-Core
   - RNDeviceInfo (14.0.2):
@@ -1244,6 +1246,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeCameraKit (from `../node_modules/react-native-camera-kit`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
@@ -1376,6 +1379,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeCameraKit:
+    :path: "../node_modules/react-native-camera-kit"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDeviceInfo:
@@ -1457,6 +1462,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 9636eee762c699ca7c85751a359101797e4c8b3b
   React-utils: d16c1d2251c088ad817996621947d0ac8167b46c
   ReactCommon: 2aa35648354bd4c4665b9a5084a7d37097b89c10
+  ReactNativeCameraKit: 9d46a5d7dd544ca64aa9c03c150d2348faf437eb
   RNCAsyncStorage: cc6479c4acd84cc7004946946c8afe30b018184d
   RNDeviceInfo: 3f2e5fcca3637f75c6d30ba287293c2f97206781
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8

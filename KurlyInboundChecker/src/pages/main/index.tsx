@@ -95,9 +95,16 @@ const Main = (props: any) => {
               );
             } else if (name === 'BarcodeScanner') {
               return (
-                <TabIcon
-                  icon={<Ionicons name={'barcode'} size={25} color="#ffffff" />}
-                />
+                <View
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{}}>
+                    <Ionicons name={'barcode'} size={25} color="#ffffff" />
+                  </View>
+                </View>
               );
             }
           };
@@ -159,7 +166,6 @@ const s = StyleSheet.create({
   },
   wrapper: {
     zIndex: 1,
-
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-around',

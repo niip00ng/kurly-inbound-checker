@@ -47,7 +47,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 0,
-    paddingTop: Platform.OS === 'ios' ? 60 : 0,
-    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? 60 : 12,
+    paddingBottom: 15,
   },
 });
