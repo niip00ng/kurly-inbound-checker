@@ -26,11 +26,13 @@ const BarcodeScanner = () => {
     (state: RootState) => state.inboundReceipts.inboundReceipts,
   );
   const [matchedItems, setMatchedItems] = useState<InboundReceiptItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const onBarcodeScan = (event: any) => {
     const scannedBarcode = event.nativeEvent.codeStringValue;
 
     if (scannedBarcode && !barcode) {
+      setLoading(true);
       showLoading();
       console.log('Scanned Barcode:', scannedBarcode);
       setBarcode(scannedBarcode);
@@ -52,7 +54,7 @@ const BarcodeScanner = () => {
           console.log('No matching items found.');
           setMatchedItems([]); // 일치하는 항목이 없으면 matchedItems를 비웁니다.
         }
-
+        setLoading(false);
         hideLoading();
       }, 2000); // 2초 후에 실행
     }
@@ -70,7 +72,7 @@ const BarcodeScanner = () => {
       />
       <View style={styles.container}>
         <Text style={styles.cardText}>
-          발주서 or 상품 바코드를 인식해 주세요
+          발주서 바코드 혹은 상품 바코드를 인식해 주세요
         </Text>
         <LinearGradient
           colors={['#C237ED', '#DE6D7E']} // 그라데이션 색상 설정
@@ -83,43 +85,62 @@ const BarcodeScanner = () => {
             onReadCode={onBarcodeScan}
             showFrame={false}
           />
+          {barcode && (
+            <View style={styles.overlay}>
+              <Text
+                style={{color: '#ffffff', fontSize: 18, fontWeight: 'bold'}}>
+                {barcode}
+              </Text>
+
+              <TouchableOpacity
+                style={{
+                  width: '90%',
+                  backgroundColor: '#333333',
+
+                  marginTop: 20,
+                }}
+                onPress={() => {
+                  setBarcode(null);
+                  setMatchedItems([]);
+                }}>
+                <LinearGradient
+                  colors={['#C237ED', '#DE6D7E']} // 그라데이션 색상 설정
+                  start={{x: 0, y: 0}} // 시작점: 왼쪽 상단
+                  end={{x: 1, y: 1}} // 끝점: 오른쪽 하단
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 15,
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                  }}>
+                  <Ionicons
+                    name={'barcode'}
+                    size={20}
+                    color={'#ffffff'}
+                    style={{marginRight: 5}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: '#ffffff',
+                    }}>
+                    바코드 다시 인식하기
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          )}
         </LinearGradient>
+
+        {/* 바코드가 있을 때, View를 위에 추가 */}
+
         {!barcode && <ActivityIndicator size="large" color="#FFFFFF" />}
-        {barcode && (
-          <TouchableOpacity
-            style={{
-              width: '100%',
-              backgroundColor: '#99999950',
-              paddingVertical: 15,
-              borderRadius: 10,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => {
-              setBarcode(null);
-              setMatchedItems([]);
-            }}>
-            <Ionicons
-              name={'barcode'}
-              size={20}
-              color={'#ffffff'}
-              style={{marginRight: 5}}
-            />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: '#ffffff',
-              }}>
-              바코드 다시 인식하기
-            </Text>
-          </TouchableOpacity>
-        )}
 
         {/* matchedItems가 존재하면 FlatList로 나열 */}
-        {matchedItems.length > 0 && (
+        {barcode && matchedItems.length > 0 && (
           <>
             <FlatList
               data={matchedItems}
@@ -132,6 +153,31 @@ const BarcodeScanner = () => {
               keyExtractor={item => item.code}
               style={styles.list}
             />
+          </>
+        )}
+
+        {!loading && barcode && matchedItems.length === 0 && (
+          <>
+            <View
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+              <Text style={{color: '#ffffff', fontSize: 20}}>
+                ❗바코드 정보 조회 실패❗
+              </Text>
+              <Text style={{color: '#bbbbbb', fontSize: 16, marginTop: 20}}>
+                컬리에 존재하지 않는 발주 및 상품 바코드입니다.
+              </Text>
+              <Text style={{color: '#bbbbbb', fontSize: 16, marginTop: 5}}>
+                바코드가 정확히 인식되었는지 확인부탁드립니다.
+              </Text>
+              <Text style={{color: '#bbbbbb', fontSize: 16, marginTop: 5}}>
+                혹시나 문제있을시 담당자에 문의해주세요.
+              </Text>
+            </View>
           </>
         )}
       </View>
@@ -153,6 +199,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     padding: 2,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 2,
+    left: 2,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000000BB',
+    zIndex: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   resultContainer: {
     padding: 20,
@@ -205,7 +263,6 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-    marginTop: 30,
   },
 });
 
