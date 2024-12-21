@@ -10,6 +10,7 @@
     "ios-prod": "ENVFILE=.env.prod react-native run-ios --udid 1E675441-F475-4B1F-B6D3-020E39D209DE",
     "ios": "ENVFILE=.env.dev react-native run-ios --udid 1E675441-F475-4B1F-B6D3-020E39D209DE",
     "ios15": "react-native run-ios --udid 4DF05B69-2DFD-4DF1-8F82-3CADE429D3AC",
+    "ios8": "NVFILE=.env.dev react-native run-ios --device 'iPhone 8'",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",

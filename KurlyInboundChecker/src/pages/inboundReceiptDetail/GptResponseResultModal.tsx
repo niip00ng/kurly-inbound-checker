@@ -44,11 +44,14 @@ const GptResponseResultModal: React.FC<GptResponseResultModalProps> = ({
             <Text style={styles.modalTitle}>이미지 검수 결과</Text>
 
             {gptResponse?.result === 'pass' && (
-              <LottieView
-                source={require('../../../assets/lottie/success_check.json')} // Lottie 파일 경로
-                autoPlay
-                style={[{marginBottom: 40}, styles.lottie]}
-              />
+              <>
+                <LottieView
+                  source={require('../../../assets/lottie/success_check.json')} // Lottie 파일 경로
+                  autoPlay
+                  style={[{marginBottom: 10}, styles.lottie]}
+                />
+                <Text style={styles.modalText}>정확하게 일치해요!</Text>
+              </>
             )}
             {gptResponse?.result === 'fail' && (
               <>
