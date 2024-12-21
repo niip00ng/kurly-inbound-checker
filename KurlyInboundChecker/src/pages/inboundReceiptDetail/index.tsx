@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,8 @@ import {
   ScrollView,
   SafeAreaView,
   Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import TopComponent from '../TopComponent';
@@ -20,16 +22,31 @@ import {RootState} from '@modules/store';
 import {useSelector} from 'react-redux';
 import InboundReceiptParcelTypeCheckCard from './component/InboundReceiptParcelTyoeCheckCard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LottieView from 'lottie-react-native';
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const InboundReceiptDetail = () => {
   const route = useRoute();
-  const {code} = route.params as {code: string}; // 단순히 code만 전달받음
+  const {code} = route.params as {code: string};
   const inboundReceiptsSlice: Array<InboundReceiptItem> = useSelector(
     (state: RootState) => state.inboundReceipts.inboundReceipts,
   );
 
   const [inboundReceipt, setInboundReceipt] =
     useState<InboundReceiptItem | null>(null);
+
+  const [isOpenAllCheck, setIsOpenAllCheck] = useState(false);
+
+  const openAllCheckLottie = (flag: boolean) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    setIsOpenAllCheck(flag);
+  };
 
   useEffect(() => {
     const findReceipt: InboundReceiptItem | undefined =
@@ -39,6 +56,28 @@ const InboundReceiptDetail = () => {
       setInboundReceipt(findReceipt);
     }
   }, [inboundReceiptsSlice, code]);
+
+  // 최초 렌더링 여부 추적용 ref
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (inboundReceipt) {
+      // 최초 렌더링이 아닌 경우에만 조건 실행
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return; // 최초 렌더링 시에는 아무 작업도 하지 않음
+      }
+
+      if (totalCheckItemSize() === checkCompletedSize()) {
+        openAllCheckLottie(true);
+
+        // 3초 뒤에 setIsOpenAllCheck(false) 실행
+        setTimeout(() => {
+          openAllCheckLottie(false);
+        }, 2000);
+      }
+    }
+  }, [inboundReceipt]);
 
   if (!inboundReceipt) {
     return (
@@ -83,6 +122,17 @@ const InboundReceiptDetail = () => {
         titleComponrnt={<Text style={s.title}>발주서 체크리스트</Text>}
       />
       <View style={s.wrapper}>
+        {/* Dimmed 오버랩된 View 추가 */}
+        {isOpenAllCheck && (
+          <View style={s.dimmedOverlay}>
+            <LottieView
+              source={require('../../../assets/lottie/clap.json')} // Lottie 파일 경로
+              autoPlay
+              style={{width: 300, height: 150}}
+            />
+            <Text style={s.dimmedText}>전체 검수가 완료되었습니다.</Text>
+          </View>
+        )}
         <LinearGradient colors={['#000000', '#000000']}>
           <ScrollView
             style={{height: '100%'}}
@@ -222,8 +272,8 @@ const InboundReceiptDetail = () => {
             totalCheckItemSize() === checkCompletedSize()
               ? '#53BD78'
               : '#333333',
-          ]} // 그라데이션 색상 설정
-          start={{x: 0, y: 0}} // 시작점: 왼쪽 상단
+          ]}
+          start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={s.footer}>
           <SafeAreaView style={[s.footerSafe]}>
@@ -281,13 +331,11 @@ const s = StyleSheet.create({
     right: 0,
     backgroundColor: '#333333',
 
-    // iOS 그림자
-    shadowColor: '#000000', // 그림자 색
-    shadowOffset: {width: 0, height: -10}, // 그림자 방향 (위쪽으로 5px)
-    shadowOpacity: 0.7, // 그림자 투명도
-    shadowRadius: 5, // 그림자 블러 반경
-    // Android 그림자 (elevation은 그림자를 생성함)
-    elevation: 10, // 그림자의 높이
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: -10},
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    elevation: 10,
     paddingBottom: Platform.OS === 'ios' ? 0 : 15,
   },
   footerSafe: {
@@ -301,5 +349,24 @@ const s = StyleSheet.create({
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  dimmedOverlay: {
+    position: 'absolute',
+    zIndex: 20,
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingBottom: 80,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // dimmed 색상
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dimmedText: {
+    color: '#ffffff',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 });
