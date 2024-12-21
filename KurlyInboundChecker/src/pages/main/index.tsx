@@ -37,8 +37,8 @@ const Main = (props: any) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: 20,
-          paddingTop: Platform.OS === 'ios' ? 60 : 10,
-          paddingBottom: 10,
+          paddingTop: Platform.OS === 'ios' ? 60 : 15,
+          paddingBottom: 15,
         }}>
         <Text style={s.headerTitle}>{title}</Text>
         <TouchableOpacity
@@ -47,7 +47,7 @@ const Main = (props: any) => {
             navigation.navigate('Notification');
           }}>
           <View style={{position: 'relative'}}>
-            <Ionicons name={'notifications'} size={30} color={'#ffffff'} />
+            <Ionicons name={'notifications'} size={24} color={'#ffffff'} />
 
             {/* 빨간 점 표시 */}
             <View
@@ -55,8 +55,8 @@ const Main = (props: any) => {
                 position: 'absolute',
                 top: -5,
                 right: -5,
-                width: 10,
-                height: 10,
+                width: 6,
+                height: 6,
                 borderRadius: 5,
                 backgroundColor: 'red',
               }}
@@ -200,7 +200,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#ffffff',
   },

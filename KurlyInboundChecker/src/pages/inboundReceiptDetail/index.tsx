@@ -257,7 +257,7 @@ const s = StyleSheet.create({
     paddingBottom: 100,
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#ffffff',
     fontWeight: 'bold',
   },

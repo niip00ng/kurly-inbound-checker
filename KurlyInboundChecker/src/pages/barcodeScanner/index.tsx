@@ -190,7 +190,7 @@ const BarcodeScanner = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333333',
+    backgroundColor: '#000000',
     paddingTop: 10,
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#ffffff',
     fontWeight: 'bold',
   },

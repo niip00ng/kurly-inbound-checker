@@ -270,7 +270,7 @@ const InboundReceiptProductCheckCard: React.FC<
             style={styles.productImage}
             source={{uri: product.imageUrl}}
           />
-          <View style={{width: '100%', paddingLeft: 10}}>
+          <View style={{width: '100%', paddingLeft: 20}}>
             <View style={styles.cardRow}>
               <Text style={styles.label}>상품코드</Text>
               <Text style={styles.value}>{product.goodsCode}</Text>
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     minWidth: 90,
     color: '#ffffff',
     fontWeight: 'bold',
-    marginRight: 20,
+    marginRight: 5,
   },
   value: {
     fontSize: 14,
